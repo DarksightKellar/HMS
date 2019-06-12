@@ -5,11 +5,11 @@ from ordering import ordering
 
 class HarmonySearch():
     # number of decision variables (instruments, in this case, nurse 0-1 assignment values for scheduling period)
-    N_DECISION_VARS = 2
-    HMCR = 0  # Harmony Memory Consideration Rate
-    PAR = 0  # Pitch Adjustment Rate
-    N_IMROVISATIONS = 0
-    N_ALLOCATIONS = 1
+    N_DECISION_VARS = 5
+    HMCR = 0.1  # Harmony Memory Consideration Rate
+    PAR = 0.1  # Pitch Adjustment Rate
+    N_IMROVISATIONS = 1000
+    N_ALLOCATIONS = 90  # 30-day period, 3 shifts per day
 
     #  harmony_memory: list of memorised decision variable values
     HARMONY_MEMORY = []
