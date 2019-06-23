@@ -35,7 +35,7 @@ class HarmonySearch():
         instance.nurses
         instance.contracts
         instance.skills
-        instance.shifts  # a set; get number by counting
+        instance.shifts  # set of possible shift types
         instance.scheduling_period  # ie, number of days per period
         instance.cover_request_matrix  # is this the demand?
         instance.day_off_matrix
