@@ -1,0 +1,41 @@
+<Solution>
+    <SchedulingPeriodID>TOY1</SchedulingPeriodID>
+    <Competitor>Kelvin</Competitor>
+    <SoftConstraintsPenalty>3</SoftConstraintsPenalty>
+
+    <Assignment>
+        <Date>2010-01-01</Date>
+        <Employee>1</Employee>
+        <ShiftType>L</ShiftType>
+    </Assignment>
+
+    <Assignment>
+        <Date>2010-01-01</Date>
+        <Employee>2</Employee>
+        <ShiftType>E</ShiftType>
+    </Assignment>
+
+    <Assignment>
+        <Date>2010-01-01</Date>
+        <Employee>3</Employee>
+        <ShiftType>E</ShiftType>
+    </Assignment>
+
+    <Assignment>
+        <Date>2010-01-01</Date>
+        <Employee>4</Employee>
+        <ShiftType>N</ShiftType>
+    </Assignment>
+
+    <Assignment>
+        <Date>2010-01-01</Date>
+        <Employee>5</Employee>
+        <ShiftType>E</ShiftType>
+    </Assignment>
+
+    <Assignment>
+        <Date>2010-01-01</Date>
+        <Employee>0</Employee>
+        <ShiftType>N</ShiftType>
+    </Assignment>
+</Solution>

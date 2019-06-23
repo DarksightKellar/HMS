@@ -1,0 +1,37 @@
+SCHEDULING_PERIOD;
+EXAMPLE, 2010-01-01, 2010-01-29;
+
+SKILLS = 1;
+
+Nurse;
+
+SHIFT_TYPES = 2;
+E, Early, 06:30:00, 14:30:00, 1, Nurse;
+L, Late, 14:30:00, 22:30:00, 1, Nurse;
+
+CONTRACTS = 2;
+0, fulltime, (1|1), (1|1|16), , , , , , , , , , , , , , , , 0, , 1, 0;
+1, 75_time, (1|1), (1|1|12), , , , , , , , , , , , , , , , 0, , 1, 0;
+
+PATTERNS = 1;
+0, 1, 0, L Any E Any;
+
+EMPLOYEES = 2;
+0, 0, 0, 1, Nurse;
+1, 1, 0, 1, Nurse;
+
+DAY_OF_WEEK_COVER = 2;
+Monday, , E, 2;
+Tuesday, , L, 2;
+
+DATE_SPECIFIC_COVER = 0;
+
+DAY_OFF_REQUESTS = 1;
+0, 2010-01-03, 1;
+
+DAY_ON_REQUESTS = 0;
+
+SHIFT_OFF_REQUESTS = 1;
+1, 2010-01-15, L, 1;
+
+SHIFT_ON_REQUESTS = 0;
