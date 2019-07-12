@@ -40,7 +40,6 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
         'total': 0,
         'consecutive': 0,
         'per_t': [[0 for _ in range(M_List[N]+1)] for N in range(len(Numberings))],
-        'last': 0,
         'penalty_min_consecutive': 1,
         'penalty_max_consecutive': 1,
         'penalty_min_between': 1,
@@ -68,7 +67,9 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
                 elif nr < lnr_less1:
                     numbering_initialised = True
 
-                last_nr = nr
+            # line below wrongly indented in (Burke), leading to an erroneous last_nr value==max_nr when no event
+            # in the schedule matches a defined number in a numbering (in which case it should be undefined)
+            last_nr = nr
 
             # get numbering of previous event in schedule
             e = getLastEventTimeSlot(events_in_prev_schedule[0:e])
@@ -84,12 +85,12 @@ if __name__ == '__main__':
 
     prev_numberings = [pN0, pN1, pN2]
 
-    prev_personal_schedule1 = [1,0,0, 0,0,0, 0,0,0, 1,0,0, 0,0,0, 1,0,0, 1,0,0]
+    prev_personal_schedule1 = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
     prev_personal_schedule2 = [1,0,0, 0,0,1, 0,0,1, 0,0,0, 0,0,0, 0,0,0, 0,0,1]
     prev_solution = [prev_personal_schedule1, prev_personal_schedule2]
 
     A = initialise(prev_numberings, prev_personal_schedule1, M_LIST)
-    B = initialise(prev_numberings, prev_personal_schedule2, M_LIST)
+    # B = initialise(prev_numberings, prev_personal_schedule2, M_LIST)
 
     print(A)
     # print(B)

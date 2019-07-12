@@ -3,6 +3,7 @@ from costs import *
 
 
 def final_evaluation(Numberings, values):
+    numbering_i = 0
     for numbering in Numberings:
         if values['total'] > MAX_TOTAL:
             values['penalty_max_total'] = values['penalty_max_total'] + \
@@ -24,17 +25,20 @@ def final_evaluation(Numberings, values):
 
         for t in numbering:
             # hopefully MAX_PER_T is initialised as an array of coherent values before this point
-            if per_t[t] > MAX_PER_T[t]:
+            if values['per_t'][numbering_i][t] > MAX_PER_T[numbering_i][t]:
                 values['penalty_max_per_t'] = values['penalty_max_per_t'] + \
-                    COST_MAX_PERT * (per_t[t] - MAX_PER_T[t])
+                    COST_MAX_PERT * (values['per_t'][numbering_i][t] - MAX_PER_T[numbering_i][t])
 
-            if per_t[t] < MIN_PER_T[t]:
+            if values['per_t'][numbering_i][t] < MIN_PER_T[numbering_i][t]:
                 values['penalty_min_per_t'] = values['penalty_min_per_t'] + \
-                    COST_MIN_PERT * (MIN_PER_T[t] - per_t[t])
+                    COST_MIN_PERT * (MIN_PER_T[numbering_i][t] - values['per_t'][numbering_i][t])
 
             if numbering[0] + numbering[Tn] - numbering[last_event] > MAX_BETWEEN:
                 values['penalty_max_between'] = values['penalty_max_between'] + \
                     COST_MAX_BETWEEN * \
                     (numbering[0] + numbering[Tn] -
                      numbering[last_event] - MAX_BETWEEN)
+
+        numbering_i = numbering_i + 1
+    
     return values

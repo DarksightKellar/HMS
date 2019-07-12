@@ -11,7 +11,7 @@ def evaluate(events_in_schedule, events_in_prev_schedule, Numberings):
 
     # get numbering of first event in `events_in_schedule`
     e = 0
-    event_numbering = events_in_schedule[0]
+    event_numbering = events_in_schedule[e]
 
     end_of_solution = False
 

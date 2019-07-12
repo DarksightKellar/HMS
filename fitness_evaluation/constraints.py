@@ -1,14 +1,16 @@
 '''
 These constraints are used in the numbering-based evaluation method.
 
+TODO: These constraints should be encapsulated as a contract, to be applied per staff
+
 '''
 
-# Write functions that can construct these numberings dynamically, given number of days in
+# TODO: Write functions that can construct these numberings dynamically, given number of days in
 # scheduling period and number of shifts per day. Also generates the corresponding M_LIST
 pN0 = [-7,-7,-7, -6,-6,-6, -5,-5,-5, -4,-4,-4, -3,-3,-3, -2,-2,-2, -1,-1,-1]  
 pN1 = [None,None,-7, None,None,-6, None,None,-5, None,None,-4, None,None,-3, None,None,-2, None,None,-1]
 
-# pN3 starts (counting backward) from -2 instead of -1 because the next number in the current
+# pN2 starts (counting backward) from -2 instead of -1 because the next number in the current
 # numbering N3 is 0, but logically there's actually a gap between the two events, if they do occur
 # on those numbers, so we don't want the algorithm to treat them as consecutive
 # (but what if we're also looking at min/max consecutive weekends? ... sth for Future Kelvin to ponder)
@@ -58,5 +60,9 @@ MAX_BETWEEN = 1
 MIN_BETWEEN = 0
 
 # maximum, minimum number of events mappable to one time slot
-MAX_PER_T = []
-MIN_PER_T = []
+MAX_PER_T = [[1 for _ in range(N)] for N in M_LIST]
+MIN_PER_T = [[0 for _ in range(N)] for N in M_LIST]
+
+# modify individual slots as required
+# eg. MIN_PER_T[numering_i][nr] = 1
+# Useful for day and/or shift on/off request constraints
