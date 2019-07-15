@@ -17,7 +17,7 @@ def evaluate(events_in_schedule, events_in_prev_schedule, Numberings):
 
     while not end_of_solution:
         # update all numbering counters with intermediate evaluation
-        intermediate_evaluation(Numberings, event, values, last_nr)
+        values = intermediate_evaluation(Numberings, event, values, last_nr)
 
         # get numbering of next event in planning period
         e = e + 1
@@ -25,4 +25,4 @@ def evaluate(events_in_schedule, events_in_prev_schedule, Numberings):
 
     # perform final evaluation
     cost = final_evaluation(Numberings)
-    return cost
+    return [cost, values]
