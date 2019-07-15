@@ -33,18 +33,24 @@ def getLastEventTimeSlot(schedule):
 
 
 def initialise(Numberings, events_in_prev_schedule, M_List):
+    numbering_count = len(Numberings)
+
+    initial_zeroes = [0 for _ in range(numbering_count)]
+
+    values = {
+        'last_nr': [None for _ in range(numbering_count)],
+        'total': initial_zeroes,
+        'consecutive': initial_zeroes,
+
         # per_t is only used when evaluating current schedules, and since numberings for
         # those always start at 0, we can safely use the variable, for the i-th numbering, as:
         # per_t[i][the_numbering_the_event_falls_on] 
-    values = {
-        'total': 0,
-        'consecutive': 0,
-        'per_t': [[0 for _ in range(M_List[N]+1)] for N in range(len(Numberings))],
-        'penalty_min_consecutive': 1,
-        'penalty_max_consecutive': 1,
-        'penalty_min_between': 1,
-        'penalty_max_between': 1,
-        'N_last_nr': [0 for _ in range(len(Numberings))]
+        'per_t': [[0 for _ in range(M_List[N]+1)] for N in range(numbering_count)],
+
+        'penalty_min_consecutive': initial_zeroes,
+        'penalty_max_consecutive': initial_zeroes,
+        'penalty_min_between': initial_zeroes,
+        'penalty_max_between': initial_zeroes,
     }
 
     i = 0
@@ -63,7 +69,7 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
                 nr = new_nr # position of this step is erroneous in (Burke)
                 lnr_less1 = last_nr - 1
                 if nr == lnr_less1:
-                    values['consecutive'] = values['consecutive'] + 1
+                    values['consecutive'][i] = values['consecutive'][i] + 1
                 elif nr < lnr_less1:
                     numbering_initialised = True
 
@@ -82,6 +88,7 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
 
 if __name__ == '__main__':
     from constraints import M_LIST, pN0, pN1, pN2
+    import pprint as pp
 
     prev_numberings = [pN0, pN1, pN2]
 
@@ -91,6 +98,5 @@ if __name__ == '__main__':
 
     A = initialise(prev_numberings, prev_personal_schedule1, M_LIST)
     # B = initialise(prev_numberings, prev_personal_schedule2, M_LIST)
-
-    print(A)
+    pp.pprint(A)
     # print(B)
