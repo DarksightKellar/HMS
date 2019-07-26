@@ -39,18 +39,18 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
 
     values = {
         'last_nr': [None for _ in range(numbering_count)],
-        'total': initial_zeroes,
-        'consecutive': initial_zeroes,
+        'total': initial_zeroes.copy(),
+        'consecutive': initial_zeroes.copy(),
 
         # per_t is only used when evaluating current schedules, and since numberings for
         # those always start at 0, we can safely use the variable, for the i-th numbering, as:
         # per_t[i][the_numbering_the_event_falls_on] 
         'per_t': [[0 for _ in range(M_List[N]+1)] for N in range(numbering_count)],
 
-        'penalty_min_consecutive': initial_zeroes,
-        'penalty_max_consecutive': initial_zeroes,
-        'penalty_min_between': initial_zeroes,
-        'penalty_max_between': initial_zeroes,
+        'penalty_min_consecutive': initial_zeroes.copy(),
+        'penalty_max_consecutive': initial_zeroes.copy(),
+        'penalty_min_between': initial_zeroes.copy(),
+        'penalty_max_between': initial_zeroes.copy(),
     }
 
     i = 0
@@ -80,7 +80,7 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
             # get numbering of previous event in schedule
             e = getLastEventTimeSlot(events_in_prev_schedule[0:e])
 
-        values['N_last_nr'][i] = last_nr
+        values['last_nr'][i] = last_nr
         i = i + 1
 
     return values
