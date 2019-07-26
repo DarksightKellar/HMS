@@ -69,7 +69,7 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
                 nr = new_nr # position of this step is erroneous in (Burke)
                 lnr_less1 = last_nr - 1
                 if nr == lnr_less1:
-                    values['consecutive'][i] = values['consecutive'][i] + 1
+                    values['consecutive'][i] += 1
                 elif nr < lnr_less1:
                     numbering_initialised = True
 

@@ -19,7 +19,7 @@ class Nurse():
 
         self.allocations[shift.index] = 1
         shift.assigned_nurses.append(self)
-        self.n_assignments = self.n_assignments + 1
+        self.n_assignments += 1
         self.has_no_allocations = False
 
     def unassign(self, shift: Shift):
@@ -27,5 +27,5 @@ class Nurse():
 
         self.allocations[shift.index] = 0
         shift.assigned_nurses.remove(self)
-        self.n_assignments = self.n_assignments - 1
+        self.n_assignments -= 1
         self.has_no_allocations = self.n_assignments == 0
