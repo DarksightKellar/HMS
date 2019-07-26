@@ -29,6 +29,8 @@ def final_evaluation(Numberings, values):
                 values['penalty_min_per_t'][numbering_i] += COST_MIN_PERT * \
                     (MIN_PER_T[numbering_i][t] - values['per_t'][numbering_i][t])
 
+            Tn = M_LIST[i]
+
             if numbering[0] + numbering[Tn] - numbering[last_event] > MAX_BETWEEN:
                 values['penalty_max_between'][numbering_i] += COST_MAX_BETWEEN * \
                     (numbering[0] + numbering[Tn] - numbering[last_event] - MAX_BETWEEN)
