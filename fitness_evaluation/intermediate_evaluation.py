@@ -2,14 +2,12 @@ from constraints import *
 from costs import *
 
 
-def intermediate_evaluation(Numberings, event, values):
-    # n_numberings = len(Numberings)
-
+def intermediate_evaluation(Numberings, event_numberings, values):
     numbering_i = 0
     for numbering in Numberings:
         last_nr = values['last_nr'][numbering_i]
 
-        event_numbering = numbering[event]
+        event_numbering = event_numberings[numbering_i]
 
         if event_numbering != None:
             values['total'][numbering_i] += 1

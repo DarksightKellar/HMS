@@ -32,7 +32,7 @@ def initialise(Numberings, prev_schedule, M_List):
         last_nr = getMinNumbering(numbering)
         max_nr = getMaxNumbering(numbering)
 
-        e = getLastEventTimeSlot(events_in_prev_schedule)
+        e = getLastEventTimeSlot(prev_schedule)
         while not numbering_initialised and e is not None: # running out of events not accounted for in (Burke)
             nr = numbering[e]
 
@@ -50,7 +50,7 @@ def initialise(Numberings, prev_schedule, M_List):
             last_nr = nr
 
             # get numbering of previous event in schedule
-            e = getLastEventTimeSlot(events_in_prev_schedule[0:e])
+            e = getLastEventTimeSlot(prev_schedule[0:e])
 
         values['last_nr'][i] = last_nr
         i = i + 1
