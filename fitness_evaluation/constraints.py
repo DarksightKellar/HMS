@@ -61,8 +61,8 @@ MAX_BETWEEN = 1
 MIN_BETWEEN = 0
 
 # maximum, minimum number of events mappable to one time slot
-MAX_PER_T = [[1 for _ in range(N)] for N in M_LIST]
-MIN_PER_T = [[0 for _ in range(N)] for N in M_LIST]
+MAX_PER_T = [[1 for _ in range(N+1)] for N in M_LIST]
+MIN_PER_T = [[0 for _ in range(N+1)] for N in M_LIST]
 
 # modify individual slots as required
 # eg. MIN_PER_T[numering_i][nr] = 1

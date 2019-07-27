@@ -51,6 +51,9 @@ def initialise(Numberings, events_in_prev_schedule, M_List):
         'penalty_max_consecutive': initial_zeroes.copy(),
         'penalty_min_between': initial_zeroes.copy(),
         'penalty_max_between': initial_zeroes.copy(),
+        'penalty_max_total': initial_zeroes.copy(),
+        'penalty_min_total': initial_zeroes.copy(),
+        'penalty_max_per_t': [[0 for _ in range(M_List[N]+1)] for N in range(numbering_count)]
     }
 
     i = 0

@@ -14,10 +14,10 @@ def intermediate_evaluation(Numberings, event, values):
         if event_numbering != None:
             values['total'][numbering_i] += 1
 
-            if event_numbering == last_nr + 1:
+            if last_nr is not None and event_numbering == last_nr + 1:
                 values['consecutive'][numbering_i] += 1
 
-            elif event_numbering > last_nr + 1:
+            elif last_nr is not None and event_numbering > last_nr + 1:
                 if values['consecutive'][numbering_i] < MIN_CONSECUTIVE:
                     values['penalty_min_consecutive'][numbering_i] += COST_MIN_CONSECUTIVE * \
                         (MIN_CONSECUTIVE - values['consecutive'][numbering_i])
