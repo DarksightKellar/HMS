@@ -1,36 +1,9 @@
 from initialise import *
 from final_evaluation import *
 from intermediate_evaluation import *
+from helpers import get_nth_event_numberings
 
-
-def get_nth_event_numberings(n, events, numberings):
-    '''
-    For all numberings in  `numberings`, 
-    get the numbering of the `n`th event in `events`, in a list
-
-    Returns `None` if there is no `n`th event
-    '''
-    events_encountered = 0
-    event_index = 0
-    event_numberings = []
-
-    # Find index of event n
-    while events_encountered < n:
-        while events[event_index] is not 1:
-            event_index += 1
-
-            # if event_index reaches event list size, we've run outta events
-            if event_index == len(events):
-                return None
-
-        events_encountered += 1
-
-    for numbering in numberings:
-        event_numberings.append(numbering[event_index])
-
-    return event_numberings
     
-
 # Every personal schedule is evaluated separately
 def evaluate(events_in_schedule, events_in_prev_schedule, numberings, prev_numberings, M_LIST):
     # initialise counter values

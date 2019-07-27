@@ -1,38 +1,7 @@
-def getMinNumbering(numbering):
-    minimum = numbering[0]
-    for n in numbering:
-        if n is not None:
-            if minimum is None:
-                minimum = n
-            elif n < minimum:
-                minimum = n
-
-    return minimum
+from helpers import *
 
 
-def getMaxNumbering(numbering):
-    maximum = numbering[0]
-    for n in numbering:
-        if n is not None:
-            if maximum is None:
-                maximum = n
-            elif n > maximum:
-                maximum = n
-
-    return maximum
-
-
-def getLastEventTimeSlot(schedule):
-    last_index = None
-
-    for i in range(len(schedule)):
-        if schedule[i] != 0:
-            last_index = i
-
-    return last_index
-
-
-def initialise(Numberings, events_in_prev_schedule, M_List):
+def initialise(Numberings, prev_schedule, M_List):
     numbering_count = len(Numberings)
 
     initial_zeroes = [0 for _ in range(numbering_count)]
