@@ -34,6 +34,18 @@ def initialise(Numberings, prev_schedule, M_List):
         max_nr = getMaxNumbering(numbering)
 
         e = getLastEventTimeSlot(prev_schedule)
+        
+        if numbering[e] is not None:
+            # Since we've found an event that is defined on this numbering,
+            # increment consecutive to prepare to count
+            # potential extra consecutive events if any.
+            # Even if no extra consecutive event is found,
+            # this should still remain 1, as at least one event
+            # for this numbering exists
+            # (Grossly overlooked, yet assumed, in Burke. GADDAMIT!!!)
+            values['consecutive'][i] += 1
+        
+        last_event_nr = numbering[e]
         while not numbering_initialised and e is not None: # running out of events not accounted for in (Burke)
             nr = numbering[e]
 
@@ -53,7 +65,7 @@ def initialise(Numberings, prev_schedule, M_List):
             # get numbering of previous event in schedule
             e = getLastEventTimeSlot(prev_schedule[0:e])
 
-        values['last_nr'][i] = last_nr
+        values['last_nr'][i] = last_event_nr
         i = i + 1
 
     print('initial values')
