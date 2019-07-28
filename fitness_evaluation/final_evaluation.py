@@ -21,10 +21,12 @@ def final_evaluation(Numberings, values):
             values['penalty_min_consecutive'][numbering_i] += COST_MIN_CONSECUTIVE * \
                 (MIN_CONSECUTIVE - values['consecutive'][numbering_i])
 
+        prev_t = None
         for t in numbering:
-            if t is None:
+            if t is None or t == prev_t:
                 continue
 
+            prev_t = t
             # hopefully MAX_PER_T is initialised as an array of coherent values before this point
             if values['per_t'][numbering_i][t] > MAX_PER_T[numbering_i][t]:
                 values['penalty_max_per_t'][numbering_i][t] += COST_MAX_PERT * \

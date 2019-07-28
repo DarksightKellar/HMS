@@ -17,6 +17,8 @@ pN1 = [None,None,-7, None,None,-6, None,None,-5, None,None,-4, None,None,-3, Non
 # (Maybe that's just be another numbering, albeit similar to this...)
 pN2 = [None,None,None, None,None,None, None,None,None, None,None,None, None,None,None, -3,-3,-3, -2,-2,-2]
 
+# prev_events = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
+# events = [1,0,0, 1,0,0, 0,1,0, 0,1,0, 0,0,1, 0,0,0, 0,0,0]
 N0 = [0,0,0, 1,1,1, 2,2,2, 3,3,3, 4,4,4, 5,5,5, 6,6,6]  
 N1 = [None,None,0, None,None,1, None,None,2, None,None,3, None,None,4, None,None,5, None,None,6]  
 N2 = [None,None,None, None,None,None, None,None,None, None,None,None, None,None,None, 0,0,0, 1,1,1]
@@ -49,12 +51,13 @@ The following are constraints used and their numberings for them (for a 30-day p
 N_NUMBERINGS = 3
 
 # upper, lower limits for number of events
+# TODO: These costs should also be PER numbering
 MAX_TOTAL = 1
 MIN_TOTAL = 0
 
 # maximum, minimum number of consecutive events
-MAX_CONSECUTIVE = 1
-MIN_CONSECUTIVE = 0
+MAX_CONSECUTIVE = 2
+MIN_CONSECUTIVE = 1
 
 # maximum, minimum gap between two non-consecutive events
 MAX_BETWEEN = 1

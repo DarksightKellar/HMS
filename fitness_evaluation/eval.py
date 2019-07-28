@@ -34,13 +34,13 @@ if __name__ == '__main__':
         pN0, pN1, pN2, \
         N0, N1, N2, M_LIST
     
-    events = [1,0,0, 1,0,0, 0,1,0, 0,1,0, 0,0,1, 0,0,0, 0,0,0]
-    prev_events = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
+    schedule = [1,0,0, 1,0,0, 0,1,0, 0,1,0, 0,0,1, 0,0,0, 0,0,0]
+    prev_schedule = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
 
     numberings = [N0, N1, N2]
     prev_numberings = [pN0, pN1, pN2]
 
-    results = evaluate(events, prev_events, numberings, prev_numberings, M_LIST)
+    results = evaluate(schedule, prev_schedule, numberings, prev_numberings, M_LIST)
 
     print('')
     pp.pprint(results)

@@ -1,3 +1,4 @@
+import pprint as pp
 from helpers import *
 
 
@@ -55,12 +56,13 @@ def initialise(Numberings, prev_schedule, M_List):
         values['last_nr'][i] = last_nr
         i = i + 1
 
+    print('initial values')
+    pp.pprint(values)
     return values
 
 
 if __name__ == '__main__':
     from constraints import M_LIST, pN0, pN1, pN2
-    import pprint as pp
 
     prev_numberings = [pN0, pN1, pN2]
 
