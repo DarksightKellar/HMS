@@ -54,7 +54,7 @@ N_NUMBERINGS = 3
 
 # upper, lower limits for number of events
 MAX_TOTAL = [1 for _ in range(N_NUMBERINGS)]
-MIN_TOTAL = [0 for _ in range(N_NUMBERINGS)]
+MIN_TOTAL = [1 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum number of consecutive events
 MAX_CONSECUTIVE = [2 for _ in range(N_NUMBERINGS)]

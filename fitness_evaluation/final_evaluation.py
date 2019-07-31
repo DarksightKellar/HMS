@@ -49,7 +49,7 @@ def final_evaluation(Numberings, values):
         if last_nr != None:
             # The last_nr being None for this numbering at this point means that
             #  no event in this schedule was ever defined for this numbering.
-            #  This should already have been appropriately punished in min_per_t and min_consecutive logic.
+            #  This should already have been appropriately punished in min_total logic.
             #  Here we care only about max_between, and since there's no relevant events 
             #  (last_nr has remained None throughout evaluation), then we forget it.
             max_numbering = M_LIST[numbering_i]
