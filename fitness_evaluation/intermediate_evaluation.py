@@ -31,10 +31,8 @@ def intermediate_evaluation(Numberings, event_numberings, values):
                 if event_numbering - last_nr - 1 > MAX_BETWEEN[numbering_i]:
                     values['penalty_max_between'][numbering_i] += COST_MAX_BETWEEN[numbering_i] * \
                         ((event_numbering - last_nr - 1) - MAX_BETWEEN[numbering_i])
-
-                if event_numbering - last_nr - 1 > MAX_BETWEEN:
-                    values['penalty_max_between'][numbering_i] += COST_MAX_BETWEEN * \
-                        ((event_numbering - last_nr - 1) - MAX_BETWEEN)
+                
+                values['consecutive'][numbering_i] = 1
 
             values['per_t'][numbering_i][event_numbering] += 1
             values['last_nr'][numbering_i] = event_numbering

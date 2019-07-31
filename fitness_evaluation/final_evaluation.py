@@ -42,11 +42,21 @@ def final_evaluation(Numberings, values):
                     (MIN_PER_T[numbering_i][t] - values['per_t'][numbering_i][t])
 
         
-        last_numbering = M_LIST[numbering_i]
-        gap_to_end_of_period = get_first_numbering(numbering) + last_numbering - values['last_nr'][numbering_i]
+        # Check how many unassigned numbers for this numbering remain,
+        #  and use this to punish a max_between violation if needed
+        last_nr = values['last_nr'][numbering_i]
+        
+        if last_nr != None:
+            # The last_nr being None for this numbering at this point means that
+            #  no event in this schedule was ever defined for this numbering.
+            #  This should already have been appropriately punished in min_per_t and min_consecutive logic.
+            #  Here we care only about max_between, and since there's no relevant events 
+            #  (last_nr has remained None throughout evaluation), then we forget it.
+            max_numbering = M_LIST[numbering_i]
+            gap_to_end_of_period = get_first_numbering(numbering) + max_numbering - last_nr
 
-        if gap_to_end_of_period > MAX_BETWEEN:
-            values['penalty_max_between'][numbering_i] += COST_MAX_BETWEEN * \
-                gap_to_end_of_period - MAX_BETWEEN
+            if gap_to_end_of_period > MAX_BETWEEN[numbering_i]:
+                values['penalty_max_between'][numbering_i] += COST_MAX_BETWEEN[numbering_i] * \
+                    gap_to_end_of_period - MAX_BETWEEN[numbering_i]
 
         numbering_i = numbering_i + 1

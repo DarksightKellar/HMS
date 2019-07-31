@@ -36,7 +36,8 @@ def initialise(Numberings, prev_schedule, M_List):
         e = getLastEventTimeSlot(prev_schedule)
         
         if numbering[e] is not None:
-            # Since we've found an event that is defined on this numbering,
+            # Since we've found an event at the end of prev_schedule 
+            # that is defined on this numbering,
             # increment consecutive to prepare to count
             # potential extra consecutive events if any.
             # Even if no extra consecutive event is found,
