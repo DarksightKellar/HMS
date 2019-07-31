@@ -16,17 +16,21 @@ def intermediate_evaluation(Numberings, event_numberings, values):
                 values['consecutive'][numbering_i] += 1
 
             elif last_nr is not None and event_numbering > last_nr + 1:
-                if values['consecutive'][numbering_i] < MIN_CONSECUTIVE:
-                    values['penalty_min_consecutive'][numbering_i] += COST_MIN_CONSECUTIVE * \
-                        (MIN_CONSECUTIVE - values['consecutive'][numbering_i])
+                if values['consecutive'][numbering_i] < MIN_CONSECUTIVE[numbering_i]:
+                    values['penalty_min_consecutive'][numbering_i] += COST_MIN_CONSECUTIVE[numbering_i] * \
+                        (MIN_CONSECUTIVE[numbering_i] - values['consecutive'][numbering_i])
 
-                if values['consecutive'][numbering_i] > MAX_CONSECUTIVE:
-                    values['penalty_max_consecutive'][numbering_i]  += COST_MAX_CONSECUTIVE * \
-                        (MAX_CONSECUTIVE - values['consecutive'][numbering_i])
+                if values['consecutive'][numbering_i] > MAX_CONSECUTIVE[numbering_i]:
+                    values['penalty_max_consecutive'][numbering_i]  += COST_MAX_CONSECUTIVE[numbering_i] * \
+                        (values['consecutive'][numbering_i] - MAX_CONSECUTIVE[numbering_i])
 
-                if event_numbering - last_nr - 1 < MIN_BETWEEN:
-                    values['penalty_min_between'][numbering_i] += COST_MIN_BETWEEN * \
-                        (MIN_BETWEEN - (event_numbering - last_nr - 1))
+                if event_numbering - last_nr - 1 < MIN_BETWEEN[numbering_i]:
+                    values['penalty_min_between'][numbering_i] += COST_MIN_BETWEEN[numbering_i] * \
+                        (MIN_BETWEEN[numbering_i] - (event_numbering - last_nr - 1))
+
+                if event_numbering - last_nr - 1 > MAX_BETWEEN[numbering_i]:
+                    values['penalty_max_between'][numbering_i] += COST_MAX_BETWEEN[numbering_i] * \
+                        ((event_numbering - last_nr - 1) - MAX_BETWEEN[numbering_i])
 
                 if event_numbering - last_nr - 1 > MAX_BETWEEN:
                     values['penalty_max_between'][numbering_i] += COST_MAX_BETWEEN * \

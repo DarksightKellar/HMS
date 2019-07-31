@@ -50,18 +50,19 @@ The following are constraints used and their numberings for them (for a 30-day p
 # Number of different numberings
 N_NUMBERINGS = 3
 
+# The costs below are also per numbering
+
 # upper, lower limits for number of events
-# TODO: These costs should also be PER numbering
-MAX_TOTAL = 1
-MIN_TOTAL = 0
+MAX_TOTAL = [1 for _ in range(N_NUMBERINGS)]
+MIN_TOTAL = [0 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum number of consecutive events
-MAX_CONSECUTIVE = 2
-MIN_CONSECUTIVE = 1
+MAX_CONSECUTIVE = [2 for _ in range(N_NUMBERINGS)]
+MIN_CONSECUTIVE = [1 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum gap between two non-consecutive events
-MAX_BETWEEN = 1
-MIN_BETWEEN = 0
+MAX_BETWEEN = [1 for _ in range(N_NUMBERINGS)]
+MIN_BETWEEN = [0 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum number of events mappable to one time slot
 MAX_PER_T = [[1 for _ in range(N+1)] for N in M_LIST]
