@@ -7,7 +7,7 @@ class Shift():
         self.skills_required = skills_required
         self.evaluation_multiplier = evaluation_multiplier
         self.weight = weight
-        self.assignment_difficulty = 1
+        self.assignment_difficulty = 0
         self.assigned_nurses = []
 
     def evaluate(self):

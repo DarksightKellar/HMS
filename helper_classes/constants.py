@@ -1,0 +1,1 @@
+N_ALLOCATIONS = 3*7

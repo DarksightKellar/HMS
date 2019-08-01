@@ -69,8 +69,8 @@ def initialise(Numberings, prev_schedule, M_List):
         values['last_nr'][i] = last_event_nr
         i = i + 1
 
-    print('initial values')
-    pp.pprint(values)
+    # print('initial values')
+    # pp.pprint(values)
     return values
 
 

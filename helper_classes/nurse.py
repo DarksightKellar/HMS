@@ -1,15 +1,15 @@
-from shift import Shift
-
+from helper_classes.shift import Shift
+from helper_classes.constants import *
 
 class Nurse():
 
-    def __init__(self, id, last_name, other_names, skills, n_allocations, max_assignments):
+    def __init__(self, id, last_name, other_names, skills, max_assignments):
         self.id = id
         self.last_name = last_name
         self.other_names = other_names
         self.skills = skills
-        self.n_allocations = n_allocations
-        self.allocations = [0 for _ in range(n_allocations)]
+        self.n_allocations = N_ALLOCATIONS
+        self.allocations = [0 for _ in range(N_ALLOCATIONS)]
         self.has_no_allocations = True
         self.max_assignments = max_assignments
         self.n_assignments = 0

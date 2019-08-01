@@ -1,5 +1,4 @@
 from helper_classes.shift import Shift
-from helper_classes.nurse import Nurse
 
 
 def evaluate_harmony(harmony):

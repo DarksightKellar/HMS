@@ -1,3 +1,4 @@
+from typing import List
 # burke et al (2008)
 
 # combining a variable neighbourhood search with
@@ -5,18 +6,18 @@
 # schedules, using heuristic ordering
 
 from helper_classes.evaluate import evaluate_solution
-from helper_classes.shift import Shift
 from helper_classes.nurse import Nurse
+from helper_classes.shift import Shift
 
 
-def ordering(shifts, nurses):
+def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
     '''
-    `shifts` An array of Shift objects
+    `shifts` A list of Shift objects
 
-    `nurses` An array of Nurse objects
+    `nurses` A list of Nurse objects
     '''
-    # each nurse in nurses is a list of n_shifts 0-1 allocations, for each shift in shifts
 
+    # each nurse in nurses is a list of `n_shifts` 0-1 allocations for each shift in shifts
     n_shifts = len(shifts)
     n_nurses = len(nurses)
 
@@ -26,12 +27,12 @@ def ordering(shifts, nurses):
 
     # Apply weight evaluation function to each shift's weight
     # to determine assignment difficulty
-    for i, shift in shifts:
+    i = 0
+    for shift in shifts:
         shift.evaluate()
 
     # Sort shifts (decreasing order of assignment difficulty)
-    sorted_shifts = sorted(
-        shifts, key=lambda shift: shift.assignment_difficulty, reverse=True)
+    sorted_shifts = sorted(shifts, key=lambda shift: shift.assignment_difficulty, reverse=True)
 
     # for each sorted shift, assign this to the nurse that incurs lowest cost
     for shift in sorted_shifts:
@@ -80,3 +81,46 @@ def ordering(shifts, nurses):
                 best_nurse = nurse
 
     return final_schedule
+
+
+if __name__ == '__main__':
+    shifts = []
+
+    from helper_classes.constants import *
+
+    for i in range(N_ALLOCATIONS):
+        is_morning_shift = i % 3 == 0
+        is_afternoon_shift = i % 3 == 1
+        is_night_shift = i % 3 == 2
+
+        is_weekend = i % 21 in [15,16,17,18,19,20]
+
+        shift = 'morning' if is_morning_shift else 'afternoon' if is_afternoon_shift else 'night'
+        nurses_required = 3 if is_morning_shift else 5 if is_afternoon_shift else 2
+        weight = 100 if is_night_shift else 50 if is_weekend else 20
+        multiplier = 1
+
+        shifts.append(Shift(
+            index=i,
+            shift_type=shift,
+            skills_required=['N'],
+            n_nurses_required=nurses_required, 
+            weight=weight,
+            evaluation_multiplier=multiplier
+        ))
+
+        if is_weekend:
+            shifts[i].nurses_required = 1 if is_night_shift else 2
+
+        if is_night_shift:
+            shifts[i].skills_required.append('NO')
+
+    nurses = []
+    for i in range(10):
+        nurses.append(Nurse(id, last_name='Mansa'+i, other_names=i+'Yaa', skills=['N'], max_assignments=5))
+
+    for i in range(2):
+        nurses.append(Nurse(id, last_name='Mansa'+i, other_names=i+'Yaa', skills=['NO'], max_assignments=5))
+
+    x = ordering(shifts, nurses)
+    print(x)
