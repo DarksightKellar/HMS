@@ -1,5 +1,5 @@
 import pprint as pp
-from helpers import *
+from fitness_evaluation.helpers import *
 
 
 def initialise(Numberings, prev_schedule, M_List):

@@ -1,4 +1,5 @@
 from helper_classes.shift import Shift
+from fitness_evaluation.eval import evaluate 
 
 
 def evaluate_harmony(harmony):

@@ -1,7 +1,7 @@
-from constraints import *
-from costs import *
+from fitness_evaluation.constraints import *
+from fitness_evaluation.costs import *
 
-from helpers import get_first_numbering
+from fitness_evaluation.helpers import get_first_numbering
 
 
 def final_evaluation(Numberings, values):

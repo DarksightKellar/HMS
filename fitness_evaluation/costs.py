@@ -1,4 +1,4 @@
-from constraints import N_NUMBERINGS
+from fitness_evaluation.constraints import N_NUMBERINGS
 
 COST_MAX_TOTAL = [1 for _ in range(N_NUMBERINGS)]
 COST_MIN_TOTAL = [1 for _ in range(N_NUMBERINGS)]

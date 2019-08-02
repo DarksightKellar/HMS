@@ -1,7 +1,8 @@
-from initialise import *
-from final_evaluation import *
-from intermediate_evaluation import *
-from helpers import get_nth_event_numberings
+from fitness_evaluation.initialise import *
+from fitness_evaluation.final_evaluation import *
+from fitness_evaluation.intermediate_evaluation import *
+from fitness_evaluation.helpers import get_nth_event_numberings
+from fitness_evaluation.constraints import M_LIST
     
 
 # Every personal schedule is evaluated separately
