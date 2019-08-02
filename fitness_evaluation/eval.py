@@ -6,7 +6,7 @@ from fitness_evaluation.constraints import M_LIST
     
 
 # Every personal schedule is evaluated separately
-def evaluate(schedule, prev_schedule, numberings, prev_numberings, M_LIST):
+def evaluate(schedule, prev_schedule, numberings, prev_numberings):
     # initialise counter values
     values = initialise(prev_numberings, prev_schedule, M_LIST)
     cost = 0
@@ -48,8 +48,8 @@ if __name__ == '__main__':
     numberings = [N0, N1, N2]
     prev_numberings = [pN0, pN1, pN2]
     
-    nicelyprintresults(evaluate(schedule, prev_schedule, numberings, prev_numberings, M_LIST))
-    nicelyprintresults(evaluate(schedule2, prev_schedule, numberings, prev_numberings, M_LIST))
+    nicelyprintresults(evaluate(schedule, prev_schedule, numberings, prev_numberings))
+    nicelyprintresults(evaluate(schedule2, prev_schedule, numberings, prev_numberings))
 
     
 
