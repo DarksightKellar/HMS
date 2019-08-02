@@ -8,6 +8,7 @@ from typing import List
 from helper_classes.evaluate import evaluate_solution
 from helper_classes.nurse import Nurse
 from helper_classes.shift import Shift
+from helper_classes.skills import Skill, SkillRequired
 
 
 def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
@@ -27,7 +28,6 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
 
     # Apply weight evaluation function to each shift's weight
     # to determine assignment difficulty
-    i = 0
     for shift in shifts:
         shift.evaluate()
 
@@ -83,10 +83,37 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
     return final_schedule
 
 
-if __name__ == '__main__':
-    shifts = []
+def count_skills(nurses, skills_required: List[SkillRequired]):
+    count = 0
+    for nurse in nurses:
+        invalid = False
+        for req_skill in skills_required:
+            if req_skill.skill in nurse.skills:
+                continue
+            else:
+                invalid = True
+                break
+        
+        if not invalid:
+            count += 1
 
+    return count
+
+
+if __name__ == '__main__':
     from helper_classes.constants import *
+
+    # create nurses
+    nurses = []
+    for i in range(10):
+        nurses.append(Nurse(id, last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill], max_assignments=5))
+
+    for i in range(2):
+        nurses.append(Nurse(id, last_name=str.format('Baako{}',i), other_names=str.format('{}Ama',i), skills=[NurseSkill, NursingOfficerSkill], max_assignments=5))
+        
+    
+    # create weighted shifts
+    shifts = []
 
     for i in range(N_ALLOCATIONS):
         is_morning_shift = i % 3 == 0
@@ -97,30 +124,47 @@ if __name__ == '__main__':
 
         shift = 'morning' if is_morning_shift else 'afternoon' if is_afternoon_shift else 'night'
         nurses_required = 3 if is_morning_shift else 5 if is_afternoon_shift else 2
-        weight = 100 if is_night_shift else 50 if is_weekend else 20
+        weight = 0
+
+        # different nurse requirements for weekend shifts
+        if is_weekend:
+            nurses_required = 1 if is_night_shift else 2
+
+        # skills_required specify the minimum number required for the shift
+        # Aside that, all base nurses count toward the total staff requirement
+        skills_required = [
+            SkillRequired(NurseSkill, nurses_required)
+        ]
+
+        if is_night_shift:
+            # require one qualified nursing officer on night shifts
+            skills_required.append(SkillRequired(NursingOfficerSkill, 1))
+            weight += NIGHT_SHIFT_WEIGHT
+
+            n_valid_nurses = count_skills(nurses, skills_required)
+            n_nurses = len(nurses)
+
+            # add weight to this new requirement
+            extra_weight = (n_nurses/n_valid_nurses) * SKILL_WEIGHT
+            weight += extra_weight
+        
+        if is_weekend:
+            weight += WEEKEND_SHIFT_WEIGHT
+
+        # add weight to shifts the later they occur
+        weight += SHIFT_DATE_WEIGHT * (N_ALLOCATIONS - i)
+        
         multiplier = 1
 
         shifts.append(Shift(
             index=i,
             shift_type=shift,
-            skills_required=['N'],
+            skills_required=skills_required,
             n_nurses_required=nurses_required, 
             weight=weight,
             evaluation_multiplier=multiplier
         ))
 
-        if is_weekend:
-            shifts[i].nurses_required = 1 if is_night_shift else 2
-
-        if is_night_shift:
-            shifts[i].skills_required.append('NO')
-
-    nurses = []
-    for i in range(10):
-        nurses.append(Nurse(id, last_name='Mansa'+i, other_names=i+'Yaa', skills=['N'], max_assignments=5))
-
-    for i in range(2):
-        nurses.append(Nurse(id, last_name='Mansa'+i, other_names=i+'Yaa', skills=['NO'], max_assignments=5))
 
     x = ordering(shifts, nurses)
     print(x)
