@@ -102,6 +102,7 @@ def count_skills(nurses, skills_required: List[SkillRequired]):
 
 if __name__ == '__main__':
     from helper_classes.constants import *
+    from math import ceil
 
     # create nurses
     nurses = []
@@ -152,8 +153,9 @@ if __name__ == '__main__':
             weight += WEEKEND_SHIFT_WEIGHT
 
         # add weight to shifts the later they occur
-        weight += SHIFT_DATE_WEIGHT * (N_ALLOCATIONS - i)
-        
+        days_to_end_of_period = ceil((N_ALLOCATIONS - i) / N_SHIFTS)
+        weight += SHIFT_DATE_WEIGHT *  days_to_end_of_period
+
         multiplier = 1
 
         shifts.append(Shift(
