@@ -34,6 +34,10 @@ def initialise(Numberings, prev_schedule, M_List):
         max_nr = getMaxNumbering(numbering)
 
         e = getLastEventTimeSlot(prev_schedule)
+
+        if e is None:
+            # No event in prev_schedule, vamoose
+            continue
         
         if numbering[e] is not None:
             # Since we've found an event at the end of prev_schedule 

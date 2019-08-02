@@ -15,7 +15,7 @@ class Nurse():
         self.n_assignments = 0
 
     def assign(self, shift: Shift):
-        assert(allocation_index < self.n_allocations and allocation_index >= 0)
+        assert(shift.index < self.n_allocations and shift.index >= 0)
 
         self.allocations[shift.index] = 1
         shift.assigned_nurses.append(self)
@@ -23,7 +23,7 @@ class Nurse():
         self.has_no_allocations = False
 
     def unassign(self, shift: Shift):
-        assert(allocation_index < self.n_allocations and allocation_index >= 0)
+        assert(shift.index < self.n_allocations and shift.index >= 0)
 
         self.allocations[shift.index] = 0
         shift.assigned_nurses.remove(self)
