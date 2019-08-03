@@ -53,15 +53,15 @@ N_NUMBERINGS = 3
 # The costs below are also per numbering
 
 # upper, lower limits for number of events
-MAX_TOTAL = [1 for _ in range(N_NUMBERINGS)]
-MIN_TOTAL = [1 for _ in range(N_NUMBERINGS)]
+MAX_TOTAL = [5 for _ in range(N_NUMBERINGS)]
+MIN_TOTAL = [3 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum number of consecutive events
-MAX_CONSECUTIVE = [2 for _ in range(N_NUMBERINGS)]
+MAX_CONSECUTIVE = [3 for _ in range(N_NUMBERINGS)]
 MIN_CONSECUTIVE = [1 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum gap between two non-consecutive events
-MAX_BETWEEN = [1 for _ in range(N_NUMBERINGS)]
+MAX_BETWEEN = [3 for _ in range(N_NUMBERINGS)]
 MIN_BETWEEN = [0 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum number of events mappable to one time slot

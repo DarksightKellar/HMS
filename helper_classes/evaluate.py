@@ -1,4 +1,6 @@
 from helper_classes.shift import Shift
+from helper_classes.nurse import Nurse
+from helper_classes.skills import *
 from fitness_evaluation.eval import evaluate 
 from fitness_evaluation.constraints import N0, N1, N2, pN0, pN1, pN2, M_LIST
 
@@ -41,16 +43,45 @@ def evaluate_solution(solution, shifts, constraints=[]) -> int:
     '''
     Evaluate a solution, returns `cost` of the solution
 
-    Returns `-1` if solution is infeasible
+    Returns `None` if solution is infeasible
     '''
 
+    total_cost = 0
     for schedule in solution:
         prev_schedule = [0 for _ in range(len(shifts))]
         numberings = [N0, N1, N2]
         prev_numberings = [pN0, pN1, pN2]
 
         res = evaluate(schedule, prev_schedule, numberings, prev_numberings)
-        cost = get_cost(res)
 
+        for per_t in res['per_t'][0]:
+            if per_t > 1:
+                return None
 
-    return cost
+        total_cost += get_cost(res)
+
+    for shift in shifts:
+        shift: Shift
+
+        # check shift requirements
+        for requirement in shift.skills_required:
+            requirement: SkillRequired
+
+            n_assigned_nurses_with_skill = 0
+            for assignee in shift.assigned_nurses:
+                assignee: Nurse
+
+                if requirement.skill in assignee.skills:
+                    n_assigned_nurses_with_skill += 1
+
+            deficit = requirement.required - n_assigned_nurses_with_skill
+
+            # if shift.shift_type == 'night' and requirement.required == 1 and deficit
+            
+            if deficit > 0:
+                total_cost += requirement.cost
+
+            if deficit < 0:
+                total_cost += requirement.cost * 10
+
+    return total_cost

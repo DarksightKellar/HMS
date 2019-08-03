@@ -24,7 +24,7 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
 
     assert(n_shifts == nurses[0].n_allocations)
 
-    final_schedule = [[0 for _ in range(n_shifts)] for _ in range(n_nurses)]
+    final_schedule = []
 
     # Apply weight evaluation function to each shift's weight
     # to determine assignment difficulty
@@ -35,17 +35,23 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
     sorted_shifts = sorted(shifts, key=lambda shift: shift.assignment_difficulty, reverse=True)
 
     # for each sorted shift, assign this to the nurse that incurs lowest cost
+    best_cost = None
     for shift in sorted_shifts:
         shift: Shift
 
         # None implies this shift hasn't been previously assigned yet
-        best_cost = None
+        shift_best_cost = None
+
+        # track the nurse that incurs the best cost for this shift, even 
+        # if this cost might be worse than best_cost
+        tentative_best_nurse = None
 
         # for this shift, the previously assigned nurse with best cost.
         # None implies algorithm hasn't begun
         best_nurse = None
 
         # find first nurse unassigned to slot, then try assigning them to see resulting cost
+        cost = None
         for nurse in nurses:
             nurse: Nurse
 
@@ -56,29 +62,54 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
             # assign this nurse to this shift
             nurse.assign(shift)
 
-            # unschedule this shift's assigned nurse, if it has a previous assignee
-            if best_nurse is not None:
-                best_nurse.unassign(shift)
 
             cost = evaluate_solution([n.allocations for n in nurses], shifts)
+            if shift_best_cost is None:
+                shift_best_cost = cost
+            
+            if best_cost is None:
+                best_cost = cost
+
+            print(cost)
 
             # Possible research point:
             # Is it better to try to improve the naively feasible solution here,
             # or allow HMS to do all the optimisation work?
 
-            if cost is None or (best_cost is not None and cost > best_cost):
-                # this cost is worse, undo this assignment
+            if cost is None or cost > best_cost:
+                # this cost is worse or contributes nothing, undo this assignment
+                print(str.format('worse. best cost is {}', best_cost))
                 nurse.unassign(shift)
                 if best_nurse is not None:
                     best_nurse.assign(shift)
-            else:
+                
+                if cost is not None:
+                    # Then we're ignoring this assignment even though solution is feasible
+                    if not cost > shift_best_cost:
+                        shift_best_cost = cost
+                        tentative_best_nurse = nurse
+
+
+            elif cost < best_cost:
                 # this cost is better, save it
+                print(str.format('better than best cost of {}', best_cost))
                 best_cost = cost
+                shift_best_cost = cost
 
                 # note that we leave the previous nurse assignment with former best cost unassigned
 
                 # save this nurse as best assigned nurse for future reference
                 best_nurse = nurse
+                tentative_best_nurse = nurse
+
+        if best_nurse is None:
+            if tentative_best_nurse is None:
+                print('FEASIBLE SOLUTION NOT FOUND')
+            else:
+                    tentative_best_nurse.assign(shift)
+
+    for n in nurses:
+        final_schedule.append(n.allocations)
 
     return final_schedule
 
@@ -119,13 +150,23 @@ def test_fit_eval():
     print(evaluate(schedule3, prev_schedule, numberings, prev_numberings))
 
 
+def nicelyprintresults(res):
+    print('')
+    pp.pprint(res)
+    print('')
+
+
 if __name__ == '__main__':
     # test_fit_eval()
 
     from helper_classes.constants import *
     from math import ceil
+    
+    import pprint as pp
 
-    # create nurses
+    
+
+    # create 12 nurses, including 2 NOs
     nurses = []
     for i in range(10):
         nurses.append(Nurse(id, last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill], max_assignments=5))
@@ -155,12 +196,12 @@ if __name__ == '__main__':
         # skills_required specify the minimum number required for the shift
         # Aside that, all base nurses count toward the total staff requirement
         skills_required = [
-            SkillRequired(NurseSkill, nurses_required)
+            SkillRequired(NurseSkill, nurses_required, COST_NURSE_REQ)
         ]
 
         if is_night_shift:
             # require one qualified nursing officer on night shifts
-            skills_required.append(SkillRequired(NursingOfficerSkill, 1))
+            skills_required.append(SkillRequired(NursingOfficerSkill, 1, COST_NURSING_OFFICER_REQ))
             weight += NIGHT_SHIFT_WEIGHT
 
             n_valid_nurses = count_skills(nurses, skills_required)
@@ -190,4 +231,6 @@ if __name__ == '__main__':
 
 
     x = ordering(shifts, nurses)
-    print(x)
+    cost = evaluate_solution(x, shifts)
+    nicelyprintresults(x)
+    print(cost)

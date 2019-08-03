@@ -10,3 +10,6 @@ SHIFT_DATE_WEIGHT = 20
 from helper_classes.skills import Skill
 NurseSkill = Skill('Nurse')
 NursingOfficerSkill = Skill("Nursing Officer")
+
+COST_NURSE_REQ = 2
+COST_NURSING_OFFICER_REQ = 5
