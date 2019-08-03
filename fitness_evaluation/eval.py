@@ -3,7 +3,7 @@ from fitness_evaluation.final_evaluation import *
 from fitness_evaluation.intermediate_evaluation import *
 from fitness_evaluation.helpers import get_nth_event_numberings
 from fitness_evaluation.constraints import M_LIST
-    
+
 
 # Every personal schedule is evaluated separately
 def evaluate(schedule, prev_schedule, numberings, prev_numberings):
@@ -28,29 +28,3 @@ def evaluate(schedule, prev_schedule, numberings, prev_numberings):
     final_evaluation(numberings, values)
     
     return values
-
-def nicelyprintresults(res):
-    print('')
-    pp.pprint(res)
-    print('')
-
-if __name__ == '__main__':
-    import pprint as pp
-    from constraints import \
-        pN0, pN1, pN2, \
-        N0, N1, N2, M_LIST
-    
-    prev_schedule = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
-
-    schedule = [1,0,0, 1,0,0, 1,0,0, 0,1,0, 0,0,1, 0,0,0, 0,0,0]
-    schedule2 = [1,0,0, 1,0,0, 1,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0]
-
-    numberings = [N0, N1, N2]
-    prev_numberings = [pN0, pN1, pN2]
-    
-    nicelyprintresults(evaluate(schedule, prev_schedule, numberings, prev_numberings))
-    nicelyprintresults(evaluate(schedule2, prev_schedule, numberings, prev_numberings))
-
-    
-
-

@@ -100,7 +100,28 @@ def count_skills(nurses, skills_required: List[SkillRequired]):
     return count
 
 
+def test_fit_eval():
+    import pprint as pp
+    from fitness_evaluation.constraints import \
+        pN0, pN1, pN2, \
+        N0, N1, N2, M_LIST
+    from fitness_evaluation.eval import evaluate
+    
+    prev_schedule = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
+
+    schedule = [1,0,0, 1,0,0, 1,0,0, 0,1,0, 0,0,1, 0,0,0, 0,0,0]
+    schedule2 = [1,0,0, 1,0,0, 1,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0]
+    schedule3 = [0,0,0, 0,0,0, 0,0,1, 0,0,0, 0,0,0, 0,0,0, 0,0,1]
+    
+
+    numberings = [N0, N1, N2]
+    prev_numberings = [pN0, pN1, pN2]
+    print(evaluate(schedule3, prev_schedule, numberings, prev_numberings))
+
+
 if __name__ == '__main__':
+    # test_fit_eval()
+
     from helper_classes.constants import *
     from math import ceil
 
