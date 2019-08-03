@@ -9,19 +9,24 @@ def get_nth_event_numberings(n, schedule, numberings):
     event_index = -1
     event_numberings = []
 
-    last_event_index = 0
+    search_start_index = 0
 
     # Find index of event n
     while events_encountered < n:
         # e = [0,0,1,0,1]
         try:
-            event_index = schedule[event_index+1 : ].index(1)
-            event_index = last_event_index + event_index + 1
-            last_event_index = event_index
+            list_to_search = schedule[search_start_index : ]
+            event_index = list_to_search.index(1) + search_start_index
+
+            # encountered an event
+            events_encountered += 1
+            if events_encountered == n:
+                break
+
+            search_start_index = event_index + 1
         except ValueError as e:
             return None
         
-        events_encountered += 1
 
     for numbering in numberings:
         event_numberings.append(numbering[event_index])
