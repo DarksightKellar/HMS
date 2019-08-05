@@ -1,9 +1,6 @@
 from typing import List
-# burke et al (2008)
 
-# combining a variable neighbourhood search with
-# heuristically unassigning shifts and repairing
-# schedules, using heuristic ordering
+import random
 
 from helper_classes.evaluate import evaluate_solution
 from helper_classes.nurse import Nurse
@@ -34,6 +31,9 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
     # Sort shifts (decreasing order of assignment difficulty)
     sorted_shifts = sorted(shifts, key=lambda shift: shift.assignment_difficulty, reverse=True)
 
+    # Randomise nurses
+    random_nurses = random.sample(nurses, len(nurses))
+
     # for each sorted shift, assign this to the nurse that incurs lowest cost
     best_cost = None
     for shift in sorted_shifts:
@@ -52,7 +52,7 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
 
         # find first nurse unassigned to slot, then try assigning them to see resulting cost
         cost = None
-        for nurse in nurses:
+        for nurse in random_nurses:
             nurse: Nurse
 
             # if this nurse has already been assigned this shift, skip to next nurse
@@ -168,7 +168,7 @@ if __name__ == '__main__':
 
     # create 12 nurses, including 2 NOs
     nurses = []
-    for i in range(10):
+    for i in range(8):
         nurses.append(Nurse(id, last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill], max_assignments=5))
 
     for i in range(2):
