@@ -53,7 +53,7 @@ N_NUMBERINGS = 3
 # The costs below are also per numbering
 
 # upper, lower limits for number of events
-MAX_TOTAL = [5 for _ in range(N_NUMBERINGS)]
+MAX_TOTAL = [6 for _ in range(N_NUMBERINGS)]
 MIN_TOTAL = [3 for _ in range(N_NUMBERINGS)]
 
 # maximum, minimum number of consecutive events

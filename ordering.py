@@ -214,7 +214,7 @@ if __name__ == '__main__':
         if is_weekend:
             weight += WEEKEND_SHIFT_WEIGHT
 
-        # add weight to shifts the later they occur
+        # add more weight to shifts the later they occur
         days_to_end_of_period = ceil((N_ALLOCATIONS - i) / N_SHIFTS)
         weight += SHIFT_DATE_WEIGHT *  days_to_end_of_period
 

@@ -79,9 +79,9 @@ def evaluate_solution(solution, shifts, constraints=[]) -> int:
             # if shift.shift_type == 'night' and requirement.required == 1 and deficit
             
             if deficit > 0:
-                total_cost += requirement.cost
+                total_cost += requirement.cost * deficit*deficit
 
-            if deficit < 0:
-                total_cost += requirement.cost * 10
+            if deficit < -1 * (requirement.required / 2):
+                total_cost += -1 * deficit/2 * requirement.cost * 10
 
     return total_cost
