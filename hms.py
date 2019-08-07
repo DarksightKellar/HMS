@@ -1,62 +1,53 @@
 import random
-from evaluate import evaluate_harmony
+from helper_classes.evaluate import evaluate_harmony
 from ordering import ordering
 
+from helper_classes.constants import *
+
+HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
+PITCH_ADJUSTMENT_RATE = 0.01
+N_IMROVISATIONS = 300000 # but quit early after 5000 iterations without improvement
+HARMONY_MEMORY_SIZE = 100
 
 class HarmonySearch():
-    # number of decision variables (instruments, in this case, nurse 0-1 assignment values for scheduling period)
-    N_DECISION_VARS = 5
-    HMCR = 0.1  # Harmony Memory Consideration Rate
-    PAR = 0.1  # Pitch Adjustment Rate
-    N_IMROVISATIONS = 1000
-    N_ALLOCATIONS = 90  # 30-day period, 3 shifts per day
+    def __init__(self, HMCR=HARMONY_MEMORY_CONSIDERATION_RATE, PAR=PITCH_ADJUSTMENT_RATE,
+                n_runs=N_IMROVISATIONS, n_allocations=N_ALLOCATIONS, hm_size=HARMONY_MEMORY_SIZE):
+        self.HMCR = HMCR
+        self.PAR = PAR
+        self.n_runs = n_runs
+        self.n_allocations = n_allocations
+        self.hm_size = hm_size
 
-    #  harmony_memory: list of memorised decision variable values
-    HARMONY_MEMORY = []
-    HM_SIZE = 0
+        #  harmony_memory: list of memorised decision variable values
+        self.harmony_memory = []
 
-    # all possible pitches for each decision variable
-    # format: [ [1, 6, 9], [8, 19, 20, 60] ]
-    # size: N_DECISION_VARS
-    # TODO - this needs to be initialised somehow (does it tho??)
-    HARMONY_SPACE = []
-
-    def hms(self, instance=None, setParams=False, params=[]):
+    def setup(self, instance=None, setParams=False, params={}):
         # Extract parameters from the instance
-
-        # _x: N-dimensional vector of decision variables
-        # K: N-dimensional vector of number of possible
-        #    values of each decision variable
-        # X: N-sized list of possible values of _x
-        # K(i): number of possible vals of x(i)
-        # X(i): K(i)-sized list of all possible discrete
-        #        vals of each decision variable, x(i)
-
-        instance.nurses
-        instance.contracts
-        instance.skills
-        instance.shifts  # set of possible shift types
-        instance.scheduling_period  # ie, number of days per period
-        instance.cover_request_matrix  # is this the demand?
-        instance.day_off_matrix
-        instance.day_on_matrix
-        instance.shift_off_matrix
-        instance.shift_on_matrix
+        nurses = instance.nurses
+        contracts = instance.contracts
+        skills = instance.skills
+        shifts = instance.shifts  # set of possible shift types
+        period = instance.scheduling_period  # ie, number of days per period
+        cover_requests = instance.cover_request_matrix  # is this the demand?
+        day_offs = instance.day_off_matrix
+        day_ons = instance.day_on_matrix
+        shift_offs = instance.shift_off_matrix
+        shift_ons = instance.shift_on_matrix
 
         # number of allocation slots in period
-        self.N_ALLOCATIONS = instance.scheduling_period * len(instance.shifts)
+        self.n_allocations = period * len(shifts)
 
         if setParams:
             self.setParams(params['hmcr'], params['par'],
-                           params['ni'], params['hms'], params['n_vars'])
+                           params['n_runs'], params['hm_size'], params['n_allocations'])
 
-        self.initialise_memory()
+        self.initialise_memory(shifts, nurses)
 
         for _ in range(self.N_IMROVISATIONS):
             new_harmony = self.improvise_harmony()
             self.update_memory(new_harmony)
 
-    def setParams(self, hmcr, par, ni, hms, n_vars):
+    def setParams(self, hmcr, par, n_runs, hms, n_allocations):
         '''
         set algorithm params:-
          hmcr: used to decide next source of decision variable value;
@@ -69,34 +60,26 @@ class HarmonySearch():
         '''
         self.HMCR = hmcr
         self.PAR = par
-        self.N_IMROVISATIONS = ni
-        self.HM_SIZE = hms
-        self.N_DECISION_VARS = n_vars
+        self.n_runs = n_runs
+        self.hm_size = hms
+        self.n_allocations = n_vars
 
-    def initialise_memory(self):
+    def initialise_memory(self, shifts, nurses):
         '''
         Initialise harmony memory with zeros
         '''
-
         # Construct pool of feasible solutions:
-        #
+        harmony_memory = []
+        for i in range(self.hm_size):
+            soln = ordering(shifts, nurses)
+            harmony_memory.append(soln)
 
-        # 0-1 list indicating assignment or not (initially all not assigned)
-        allocations = [0 for _ in range(self.N_ALLOCATIONS)]
-
-        # duplicate unassigned allocations for each nurse to form one solution
-        solution = [allocations for _ in range(self.N_DECISION_VARS)]
-
-        # duplicate solutions for each slot in harmony memory
-        self.HARMONY_MEMORY = [solution for _ in range(self.HM_SIZE)]
-
-        # ensure all solutions in harmony memory are feasible
 
     def improvise_harmony(self):
         '''
         Return a newly improvised harmony
         '''
-        new_harmony = [0 for i in range(self.N_DECISION_VARS)]
+        new_harmony = [[0 for i in range(self.n_allocations)] for _ in range(len(nurs))]
 
         # for each decision variable...
         for i in range(self.N_DECISION_VARS):
