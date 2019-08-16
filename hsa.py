@@ -26,7 +26,8 @@ class HarmonySearch():
         nurses = instance.nurses
         contracts = instance.contracts
         skills = instance.skills
-        shifts = instance.shifts  # set of possible shift types
+        shifts = instance.shifts
+        shift_types = instance.shift_types  # set of possible shift types
         period = instance.scheduling_period  # ie, number of days per period
         cover_requests = instance.cover_request_matrix  # is this the demand?
         day_offs = instance.day_off_matrix
@@ -34,14 +35,12 @@ class HarmonySearch():
         shift_offs = instance.shift_off_matrix
         shift_ons = instance.shift_on_matrix
 
-        # number of allocation slots in period
-        self.n_allocations = period * len(shifts)
-
         if setParams:
             self.setParams(params['hmcr'], params['par'],
                 params['n_improvisations'], params['hm_size'], params['n_allocations'])
 
         self.initialise_memory(shifts, nurses)
+        self.instance = instance
 
     def setParams(self, hmcr, par, n_improvisations, hms, n_allocations):
         '''
@@ -50,15 +49,15 @@ class HarmonySearch():
             from harmory_memory or select randomly from X
         par: pitch adjustment rate; used to decide when to adjust
             decision variable to neighbouring value
-        ni: number of improvisations to be done
+        n_improvisations: number of improvisations to be done
         hms: size of harmony memory
-        n_vars: number of decision variables
+        n_allocations: number of decision variables
         '''
         self.HMCR = hmcr
         self.PAR = par
         self.n_improvisations = n_improvisations
         self.hm_size = hms
-        self.n_allocations = n_vars
+        self.n_allocations = n_allocations
 
     def initialise_memory(self, shifts, nurses):
         '''
