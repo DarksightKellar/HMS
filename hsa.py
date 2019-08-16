@@ -5,9 +5,9 @@ from ordering import ordering
 from helper_classes.constants import *
 
 HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
-PITCH_ADJUSTMENT_RATE = 0.01
+PITCH_ADJUSTMENT_RATE = 0.5
 N_IMROVISATIONS = 300000 # but quit early after 5000 iterations without improvement
-HARMONY_MEMORY_SIZE = 10
+HARMONY_MEMORY_SIZE = 8
 
 class HarmonySearch():
     def __init__(self, HMCR=HARMONY_MEMORY_CONSIDERATION_RATE, PAR=PITCH_ADJUSTMENT_RATE,
@@ -74,29 +74,127 @@ class HarmonySearch():
         '''
         Return a newly improvised harmony
         '''
-        new_harmony = [[0 for i in range(self.n_allocations)] for _ in range(len(nurs))]
+        new_harmony = [[0 for _ in range(self.n_allocations)] for _ in range(len(self.instance.nurses))]
+        
+        # List of scheduled nurses (instruments that played new improvisation from HM)
+        already_scheduled_idxs = []
 
-        # for each decision variable...
-        for i in range(self.N_DECISION_VARS):
+
+        # for each instrument (ie nurse), generate new improvisation ...
+        for instrument_i in range(len(self.instance.nurses)):
             consider_hm = random.random() <= self.HMCR
 
             if consider_hm:
-                # TODO includes the 'worst' vector in possible selection
-                hm_index = random.randint(0, self.HM_SIZE)
-                new_harmony[i] = self.harmony_memory[hm_index][i]
+                hm_index = random.randint(0, self.hm_size-1)
+                [rand_soln, cost] = self.harmony_memory[hm_index]
 
-                adjust_pitch = random.random() <= self.PAR
+                schedule = rand_soln[instrument_i]
+                new_harmony[instrument_i] = schedule
+                
+                already_scheduled_idxs.append(instrument_i)
+
+                # Possibly adjust pitch
+                rand = random.random()
+                adjust_pitch = rand <= self.PAR
                 if adjust_pitch:
-                    # TODO how to adjust pitch
-                    new_harmony[i] = self.HARMONY_SPACE[i]
-            else:
-                # Pick a random pitch from the harmony space,
-                # which has format: [ [1, 6, 9], [8, 19, 20, 60] ]
-                for i in range(self.N_DECISION_VARS):
-                    possible_vals = self.HARMONY_SPACE[i]
-                    val_index = random.randint(0, possible_vals.count())
+                    PAR1 = self.PAR/3
+                    PAR2 = 2 * self.PAR/3
+                    PAR3 = self.PAR
 
-                    new_harmony[i] = possible_vals[val_index]
+                    move = rand < PAR1
+                    swap_nurses = PAR1 <= rand and rand < PAR2
+                    swap_days = PAR2 <= rand and rand < PAR3
+                    
+                    # get indices of free (as yet unscheduled) instruments
+                    free_idxs = []
+                    for idx in range(len(new_harmony)):
+                        if idx not in already_scheduled_idxs:
+                            free_idxs.append(idx)
+
+                    if move:
+                        # randomly select a free instrument
+                        rand_free_idx = random.sample(free_idxs, 1)[0]
+                        selected_instrument = new_harmony[rand_free_idx]
+                        
+                        # move the schedule (ie decision variable values)
+                        # to this instrument
+                        new_harmony[rand_free_idx] = schedule
+                        new_harmony[instrument_i] = selected_instrument
+
+                        already_scheduled_idxs.remove(instrument_i)
+                        
+                    if swap_nurses:
+                        # randomly select a scheduled instrument
+                        rand_scheduled_idx = random.sample(already_scheduled_idxs, 1)[0]
+                        selected_instrument = new_harmony[rand_scheduled_idx]
+                        
+                        # swap the schedule with this instrument
+                        new_harmony[instrument_i] = selected_instrument
+                        new_harmony[rand_scheduled_idx] = schedule
+
+                    if swap_days:
+                        from math import ceil
+
+                        # select random assigned day in the schedule
+                        indx = random.randint(0, self.n_allocations-1)
+                        while schedule[indx] is not 1:
+                            indx = random.randint(0, self.n_allocations-1)
+
+                        day_number = ceil((indx+1) / N_SHIFTS)
+
+                        # select random scheduled nurse
+                        rand_scheduled_idx = random.sample(already_scheduled_idxs, 1)[0]
+                        selected_instrument = new_harmony[rand_scheduled_idx]
+
+                        # select random assigned day in schedule of selected instrument
+                        # that is also on a day different from that selected from schedule
+                        sel_indx = random.randint(0, self.n_allocations-1)
+                        sel_day_number = ceil((sel_indx+1) / N_SHIFTS)
+
+                        while selected_instrument[sel_indx] is not 1 or day_number is sel_day_number:
+                            sel_indx = random.randint(0, self.n_allocations-1)
+                            sel_day_number = ceil((sel_indx+1) / N_SHIFTS)
+
+                        # Now swap the assignments for these days
+                        schedule[sel_indx] = 1
+                        schedule[indx] = 0
+
+                        selected_instrument[sel_indx] = 0
+                        selected_instrument[indx] = 1    
+
+            # else: # randomise instrument decision vars
+            #     for decision_var_i in range(self.n_allocations):
+            #         # RESEARCH POINT: tend these assignements toward improving cost
+            #         # (means I'll have to rather track instruments for which HM wasn't 
+            #         # considered,then for each, attempt setting decision variables)
+            #         new_harmony[instrument_i][decision_var_i] = random.randint(0, 1)
+
+
+        # for each decision variable...
+        # for decision_var_i in range(self.n_allocations):
+        #     consider_hm = random.random() <= self.HMCR
+
+        #     if consider_hm:
+        #         # TODO includes the 'worst' vector in possible selection
+        #         hm_index = random.randint(0, self.HM_SIZE)
+        #         [rand_soln, cost] = self.harmony_memory[hm_index]
+
+        #         for instrument_i in len(rand_soln):
+        #             instrument = rand_soln[instrument_i]
+        #             new_harmony[instrument_i][decision_var_i] = instrument[decision_var_i]
+
+        #         adjust_pitch = random.random() <= self.PAR
+        #         if adjust_pitch:
+        #             # TODO how to adjust pitch
+        #             new_harmony[i] = self.HARMONY_SPACE[i]
+        #     else:
+        #         # Pick a random pitch from the harmony space,
+        #         # which has format: [ [1, 6, 9], [8, 19, 20, 60] ]
+        #         for i in range(self.n_allocations):
+        #             possible_vals = self.HARMONY_SPACE[i]
+        #             val_index = random.randint(0, possible_vals.count())
+
+        #             new_harmony[i] = possible_vals[val_index]
 
         return new_harmony
 
