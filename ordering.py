@@ -15,6 +15,13 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
     `nurses` A list of Nurse objects
     '''
 
+    # Duplicate shifts and nurses so modifications don't affect them
+    _nurses = []
+    _shifts = []
+    
+    for n in nurses:
+        _nurses.append(n.duplicate())  
+
     # each nurse in nurses is a list of `n_shifts` 0-1 allocations for each shift in shifts
     n_shifts = len(shifts)
     n_nurses = len(nurses)
@@ -27,12 +34,13 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
     # to determine assignment difficulty
     for shift in shifts:
         shift.evaluate()
+        _shifts.append(shift.duplicate())
 
     # Sort shifts (decreasing order of assignment difficulty)
-    sorted_shifts = sorted(shifts, key=lambda shift: shift.assignment_difficulty, reverse=True)
+    sorted_shifts = sorted(_shifts, key=lambda shift: shift.assignment_difficulty, reverse=True)
 
     # Randomise nurses
-    random_nurses = random.sample(nurses, len(nurses))
+    random_nurses = random.sample(_nurses, len(_nurses))
 
     # for each sorted shift, assign this to the nurse that incurs lowest cost
     best_cost = None
@@ -63,14 +71,14 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
             nurse.assign(shift)
 
 
-            cost = evaluate_solution([n.allocations for n in nurses], shifts)
+            cost = evaluate_solution([n.allocations for n in _nurses], _shifts)
             if shift_best_cost is None:
                 shift_best_cost = cost
             
             if best_cost is None:
                 best_cost = cost
 
-            print(cost)
+            # print(cost)
 
             # Possible research point:
             # Is it better to try to improve the naively feasible solution here,
@@ -78,7 +86,7 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
 
             if cost is None or cost > best_cost:
                 # this cost is worse or contributes nothing, undo this assignment
-                print(str.format('worse. best cost is {}', best_cost))
+                # print(str.format('worse. best cost is {}', best_cost))
                 nurse.unassign(shift)
                 if best_nurse is not None:
                     best_nurse.assign(shift)
@@ -89,10 +97,9 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
                         shift_best_cost = cost
                         tentative_best_nurse = nurse
 
-
             elif cost < best_cost:
                 # this cost is better, save it
-                print(str.format('better than best cost of {}', best_cost))
+                # print(str.format('better than best cost of {}', best_cost))
                 best_cost = cost
                 shift_best_cost = cost
 
@@ -104,14 +111,17 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
 
         if best_nurse is None:
             if tentative_best_nurse is None:
-                print('FEASIBLE SOLUTION NOT FOUND')
+                0 # print('FEASIBLE SOLUTION NOT FOUND')
             else:
                     tentative_best_nurse.assign(shift)
 
-    for n in nurses:
-        final_schedule.append(n.allocations)
+        # so that subsequent shift logic will not re-append to _nurses
+        nurses_duplicated = True 
 
-    return final_schedule
+    for n in _nurses:
+        final_schedule.append(n.allocations.copy())
+
+    return [final_schedule, best_cost]
 
 
 def count_skills(nurses, skills_required: List[SkillRequired]):
@@ -230,7 +240,8 @@ if __name__ == '__main__':
         ))
 
 
-    x = ordering(shifts, nurses)
+    [x, c] = ordering(shifts, nurses)
     cost = evaluate_solution(x, shifts)
+    print('cost', c)
     nicelyprintresults(x)
     print(cost)

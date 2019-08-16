@@ -19,3 +19,8 @@ class Shift():
         assignment_difficulty = self.weight * self.evaluation_multiplier
         self.assignment_difficulty = assignment_difficulty
         return assignment_difficulty
+
+    def duplicate(self):
+        return Shift(
+            self.index, self.shift_type, self.n_nurses_required, 
+            self.skills_required, self.evaluation_multiplier, self.weight)

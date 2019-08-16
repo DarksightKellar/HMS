@@ -29,3 +29,6 @@ class Nurse():
         shift.assigned_nurses.remove(self)
         self.n_assignments -= 1
         self.has_no_allocations = self.n_assignments == 0
+
+    def duplicate(self):
+        return Nurse(id, self.last_name, self.other_names, self.skills, self.max_assignments)

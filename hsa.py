@@ -7,7 +7,7 @@ from helper_classes.constants import *
 HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
 PITCH_ADJUSTMENT_RATE = 0.01
 N_IMROVISATIONS = 300000 # but quit early after 5000 iterations without improvement
-HARMONY_MEMORY_SIZE = 100
+HARMONY_MEMORY_SIZE = 10
 
 class HarmonySearch():
     def __init__(self, HMCR=HARMONY_MEMORY_CONSIDERATION_RATE, PAR=PITCH_ADJUSTMENT_RATE,
@@ -39,13 +39,9 @@ class HarmonySearch():
 
         if setParams:
             self.setParams(params['hmcr'], params['par'],
-                           params['n_runs'], params['hm_size'], params['n_allocations'])
+                params['n_runs'], params['hm_size'], params['n_allocations'])
 
         self.initialise_memory(shifts, nurses)
-
-        for _ in range(self.N_IMROVISATIONS):
-            new_harmony = self.improvise_harmony()
-            self.update_memory(new_harmony)
 
     def setParams(self, hmcr, par, n_runs, hms, n_allocations):
         '''
@@ -66,13 +62,13 @@ class HarmonySearch():
 
     def initialise_memory(self, shifts, nurses):
         '''
-        Initialise harmony memory with zeros
+        Initialise harmony memory with random solutions
         '''
-        # Construct pool of feasible solutions:
-        harmony_memory = []
+        
         for i in range(self.hm_size):
-            soln = ordering(shifts, nurses)
-            harmony_memory.append(soln)
+            [soln, cost] = ordering(shifts, nurses)
+            print('cost', cost)
+            self.harmony_memory.append(soln)
 
 
     def improvise_harmony(self):
@@ -88,7 +84,7 @@ class HarmonySearch():
             if consider_hm:
                 # TODO includes the 'worst' vector in possible selection
                 hm_index = random.randint(0, self.HM_SIZE)
-                new_harmony[i] = self.HARMONY_MEMORY[hm_index][i]
+                new_harmony[i] = self.harmony_memory[hm_index][i]
 
                 adjust_pitch = random.random() <= self.PAR
                 if adjust_pitch:
@@ -107,10 +103,10 @@ class HarmonySearch():
 
     def update_memory(self, harmony):
         cost = evaluate_harmony(harmony)
-        worst_cost = evaluate_harmony(self.HARMONY_MEMORY[self.HM_SIZE])
+        worst_cost = evaluate_harmony(self.harmony_memory[self.HM_SIZE])
 
         if cost < worst_cost:
-            self.HARMONY_MEMORY.append(harmony)
+            self.harmony_memory.append(harmony)
 
     def check_stop_criterion(self):
         pass
