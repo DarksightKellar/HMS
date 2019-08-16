@@ -6,7 +6,8 @@ from helper_classes.constants import *
 
 HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
 PITCH_ADJUSTMENT_RATE = 0.5
-N_IMROVISATIONS = 300000 # but quit early after 5000 iterations without improvement
+N_IMROVISATIONS = 10
+PLATEAU_THRESHOLD = 5 # but quit early after this number of iterations without improvement
 HARMONY_MEMORY_SIZE = 8
 
 class HarmonySearch():
@@ -17,6 +18,8 @@ class HarmonySearch():
         self.n_improvisations = n_improvisations
         self.n_allocations = n_allocations
         self.hm_size = hm_size
+        self.improvisations_done = 0
+        self.n_improvisations_without_improvement = 0
 
         # harmony_memory: list of memorised decision variable values, 
         # with costs: [soln, cost]
@@ -170,7 +173,8 @@ class HarmonySearch():
             #         # considered,then for each, attempt setting decision variables)
             #         new_harmony[instrument_i][decision_var_i] = random.randint(0, 1)
 
-
+        self.improvisations_done += 1
+        
         return new_harmony
 
     def update_memory(self, harmony):
@@ -188,6 +192,21 @@ class HarmonySearch():
         if cost < worst_soln_cost[1]:
             self.harmony_memory.remove(worst_soln_cost)
             self.harmony_memory.append([harmony, cost])
+            self.n_improvisations_without_improvement = 0
+        else:
+            self.n_improvisations_without_improvement += 1
 
     def check_stop_criterion(self):
-        pass
+        '''
+        Check that the algorithm can continue to improvise.
+        
+        Returns `True` if the algorithm should continue, `False` if it should terminate
+        '''
+        if self.improvisations_done == self.n_improvisations:
+            return False
+
+        if self.n_improvisations_without_improvement > PLATEAU_THRESHOLD:
+            return False
+
+        return True
+            
