@@ -16,6 +16,8 @@ hsa.setup(instance)
 # 3. Improvise new Harmony
 new_harmony = hsa.improvise_harmony()
 
+hsa.update_memory(new_harmony)
+
 print('done')
 from helper_classes.evaluate import evaluate_solution
 cost = evaluate_solution(new_harmony, hsa.instance.shifts)

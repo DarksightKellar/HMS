@@ -1,5 +1,5 @@
 import random
-from helper_classes.evaluate import evaluate_harmony
+from helper_classes.evaluate import *
 from ordering import ordering
 
 from helper_classes.constants import *
@@ -18,7 +18,8 @@ class HarmonySearch():
         self.n_allocations = n_allocations
         self.hm_size = hm_size
 
-        #  harmony_memory: list of memorised decision variable values
+        # harmony_memory: list of memorised decision variable values, 
+        # with costs: [soln, cost]
         self.harmony_memory = []
 
     def setup(self, instance=None, setParams=False, params={}):
@@ -199,11 +200,20 @@ class HarmonySearch():
         return new_harmony
 
     def update_memory(self, harmony):
-        cost = evaluate_harmony(harmony)
-        worst_cost = evaluate_harmony(self.harmony_memory[self.HM_SIZE])
+        cost = evaluate_solution(harmony, self.instance.shifts)
 
-        if cost < worst_cost:
-            self.harmony_memory.append(harmony)
+        if cost is None:
+            return
+
+        # get memorised soln with worst cost
+        worst_soln_cost = [[], 0]
+        for soln_cost in self.harmony_memory:
+            if soln_cost[1] > worst_soln_cost[1]:
+                worst_soln_cost = soln_cost
+
+        if cost < worst_soln_cost[1]:
+            self.harmony_memory.remove(worst_soln_cost)
+            self.harmony_memory.append([harmony, cost])
 
     def check_stop_criterion(self):
         pass
