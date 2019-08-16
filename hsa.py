@@ -112,7 +112,7 @@ class HarmonySearch():
                         if idx not in already_scheduled_idxs:
                             free_idxs.append(idx)
 
-                    if move:
+                    if move and len(free_idxs != 0):
                         # randomly select a free instrument
                         rand_free_idx = random.sample(free_idxs, 1)[0]
                         selected_instrument = new_harmony[rand_free_idx]
@@ -170,32 +170,6 @@ class HarmonySearch():
             #         # considered,then for each, attempt setting decision variables)
             #         new_harmony[instrument_i][decision_var_i] = random.randint(0, 1)
 
-
-        # for each decision variable...
-        # for decision_var_i in range(self.n_allocations):
-        #     consider_hm = random.random() <= self.HMCR
-
-        #     if consider_hm:
-        #         # TODO includes the 'worst' vector in possible selection
-        #         hm_index = random.randint(0, self.HM_SIZE)
-        #         [rand_soln, cost] = self.harmony_memory[hm_index]
-
-        #         for instrument_i in len(rand_soln):
-        #             instrument = rand_soln[instrument_i]
-        #             new_harmony[instrument_i][decision_var_i] = instrument[decision_var_i]
-
-        #         adjust_pitch = random.random() <= self.PAR
-        #         if adjust_pitch:
-        #             # TODO how to adjust pitch
-        #             new_harmony[i] = self.HARMONY_SPACE[i]
-        #     else:
-        #         # Pick a random pitch from the harmony space,
-        #         # which has format: [ [1, 6, 9], [8, 19, 20, 60] ]
-        #         for i in range(self.n_allocations):
-        #             possible_vals = self.HARMONY_SPACE[i]
-        #             val_index = random.randint(0, possible_vals.count())
-
-        #             new_harmony[i] = possible_vals[val_index]
 
         return new_harmony
 
