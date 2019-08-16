@@ -2,7 +2,7 @@ from fitness_evaluation.constraints import *
 from fitness_evaluation.costs import *
 
 
-def intermediate_evaluation(Numberings, event_numberings, values):
+def intermediate_evaluation(Numberings, event_numberings, values, contract = {}):
     numbering_i = 0
     for numbering in Numberings:
         last_nr = values['last_nr'][numbering_i]

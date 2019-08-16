@@ -1,5 +1,7 @@
 from helper_classes.constants import *
 from math import ceil
+from helper_classes.nurse import *
+from helper_classes.skills import *
 
 
 class Instance():
@@ -9,7 +11,7 @@ class Instance():
         self.shifts = shifts
         self.contracts = contracts
         self.skills = skills
-        self.shifts = skills  # set of possible shift types
+        self.shift_types = shift_types  # set of possible shift types
         self.scheduling_period = scheduling_period  # ie, number of days per period
         self.cover_request_matrix = cover_request_matrix  # is this the demand?
         self.day_off_matrix = day_off_matrix
@@ -18,8 +20,8 @@ class Instance():
         self.shift_on_matrix = shift_on_matrix
 
     @classmethod
-    def create_test_instance():
-        # create 12 nurses, including 2 NOs
+    def create_test_instance(self):
+        # create 10 nurses, including 2 NOs
         nurses = []
         for i in range(8):
             nurses.append(Nurse(id, last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill], max_assignments=5))

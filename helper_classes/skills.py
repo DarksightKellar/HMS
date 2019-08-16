@@ -13,3 +13,19 @@ class SkillRequired():
         self.skill = skill
         self.required = required
         self.cost = cost
+
+def count_skills(nurses, skills_required):
+    count = 0
+    for nurse in nurses:
+        invalid = False
+        for req_skill in skills_required:
+            if req_skill.skill in nurse.skills:
+                continue
+            else:
+                invalid = True
+                break
+        
+        if not invalid:
+            count += 1
+
+    return count
