@@ -11,10 +11,10 @@ HARMONY_MEMORY_SIZE = 10
 
 class HarmonySearch():
     def __init__(self, HMCR=HARMONY_MEMORY_CONSIDERATION_RATE, PAR=PITCH_ADJUSTMENT_RATE,
-                n_runs=N_IMROVISATIONS, n_allocations=N_ALLOCATIONS, hm_size=HARMONY_MEMORY_SIZE):
+                n_improvisations=N_IMROVISATIONS, n_allocations=N_ALLOCATIONS, hm_size=HARMONY_MEMORY_SIZE):
         self.HMCR = HMCR
         self.PAR = PAR
-        self.n_runs = n_runs
+        self.n_improvisations = n_improvisations
         self.n_allocations = n_allocations
         self.hm_size = hm_size
 
@@ -39,11 +39,11 @@ class HarmonySearch():
 
         if setParams:
             self.setParams(params['hmcr'], params['par'],
-                params['n_runs'], params['hm_size'], params['n_allocations'])
+                params['n_improvisations'], params['hm_size'], params['n_allocations'])
 
         self.initialise_memory(shifts, nurses)
 
-    def setParams(self, hmcr, par, n_runs, hms, n_allocations):
+    def setParams(self, hmcr, par, n_improvisations, hms, n_allocations):
         '''
         set algorithm params:-
          hmcr: used to decide next source of decision variable value;
@@ -56,7 +56,7 @@ class HarmonySearch():
         '''
         self.HMCR = hmcr
         self.PAR = par
-        self.n_runs = n_runs
+        self.n_improvisations = n_improvisations
         self.hm_size = hms
         self.n_allocations = n_vars
 
