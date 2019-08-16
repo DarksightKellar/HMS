@@ -46,13 +46,13 @@ class HarmonySearch():
     def setParams(self, hmcr, par, n_improvisations, hms, n_allocations):
         '''
         set algorithm params:-
-         hmcr: used to decide next source of decision variable value;
-               from harmory_memory or select randomly from X
-         par: pitch adjustment rate; used to decide when to adjust
-              decision variable to neighbouring value
-         ni: number of improvisations to be done
-         hms: size of harmony memory
-         n_vars: number of decision variables
+        hmcr: used to decide next source of decision variable value;
+            from harmory_memory or select randomly from X
+        par: pitch adjustment rate; used to decide when to adjust
+            decision variable to neighbouring value
+        ni: number of improvisations to be done
+        hms: size of harmony memory
+        n_vars: number of decision variables
         '''
         self.HMCR = hmcr
         self.PAR = par
@@ -66,9 +66,9 @@ class HarmonySearch():
         '''
         
         for i in range(self.hm_size):
-            [soln, cost] = ordering(shifts, nurses)
-            print('cost', cost)
-            self.harmony_memory.append(soln)
+            soln_and_cost = ordering(shifts, nurses)
+            print('cost', soln_and_cost[1])
+            self.harmony_memory.append(soln_and_cost)
 
 
     def improvise_harmony(self):
