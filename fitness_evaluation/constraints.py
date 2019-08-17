@@ -28,25 +28,13 @@ N2 = [None,None,None, None,None,None, None,None,None, None,None,None, None,None,
 # this set is erroneously represented in (Burke)
 M_LIST = [6, 6, 1]
 
-'''
-The following are constraints used and their numberings for them (for a 30-day period; 3 shifts per day):
+from fitness_evaluation.numbering import Numbering
+from helper_classes.constants import *
 
-- [0, 1, 2, ..., 87, 88, 89]
-  - Max, Min number of assignments (set max_total, min_total to desired values)
-    NB: No numbering is actually used for this. during evaluation, each time
-        an event is encountered, total is simply incremented, then checked against 
-        max_total and min_total at the end of the day
+numbering_consecutive_days = Numbering.consecutive_days(N_DAYS, N_SHIFTS)
+numbering_night_shifts = Numbering.consecutive_night_shifts(N_DAYS, N_SHIFTS)
+numbering_weekends = Numbering.weekend(N_DAYS, N_SHIFTS)
 
-- [0, 0, 0, ..., 29, 29, 29]
-  - Max, Min number of consecutive working days; (set max_, min_consecutive to desired values)
-  - Max, Min number of consecutive free days
-  - Single Assignment per day: [same as above, max_per_t[:] is set to 1]
-
-- [None, None, 0, ..., None, None, 29]
-    - Max, min number of consecutive night shifts
-
-- [None,None,None, ..., 29]
-'''
 # Number of different numberings
 N_NUMBERINGS = 3
 
