@@ -39,7 +39,7 @@ def get_cost(vals):
     return cost
 
 
-def evaluate_solution(solution, shifts, constraints=[]) -> int:
+def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
     '''
     Evaluate a solution, returns `cost` of the solution
 
@@ -47,8 +47,12 @@ def evaluate_solution(solution, shifts, constraints=[]) -> int:
     '''
 
     total_cost = 0
+    i = 0
+    if len(prev_solution) == 0:
+        prev_solution = [[0 for _ in range(len(shifts))] for _ in range(len(solution))]
+
     for schedule in solution:
-        prev_schedule = [0 for _ in range(len(shifts))]
+        prev_schedule = prev_solution[i]
         numberings = [N0, N1, N2]
         prev_numberings = [pN0, pN1, pN2]
 
@@ -59,6 +63,7 @@ def evaluate_solution(solution, shifts, constraints=[]) -> int:
                 return None
 
         total_cost += get_cost(res)
+        i += 1
 
     for shift in shifts:
         shift: Shift
