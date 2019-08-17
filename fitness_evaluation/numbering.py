@@ -8,6 +8,10 @@ class Numbering():
         self.n_allocations = n_days * n_shifts
         self.n_days = n_days
         self.n_shifts = n_shifts
+        
+        M = self.get_M()
+        self.max_per_t = [1 for _ in range(M+1)]
+        self.min_per_t = [0 for _ in range(M+1)]
 
     def get_numberings(self):
         return self.n
@@ -80,6 +84,14 @@ class Numbering():
         to which this numbering maps
         '''
         return self.getMaxNumbering()
+
+    def set_max_per_t(self, t, val):
+        # Useful for day and/or shift off request constraints (set to 0)
+        self.max_per_t[t] = val
+
+    def set_min_per_t(self, t, val):
+        # Useful for day and/or shift on request constraints (set to 1)
+        self.min_per_t[t] = val
 
     def get_first_numbering(self):
         '''
