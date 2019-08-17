@@ -5,24 +5,6 @@ TODO: These constraints should be encapsulated as a contract, to be applied per 
 
 '''
 
-# TODO: Write functions that can construct these numberings dynamically, given number of days in
-# scheduling period and number of shifts per day. Also generates the corresponding M_LIST
-pN0 = [-7,-7,-7, -6,-6,-6, -5,-5,-5, -4,-4,-4, -3,-3,-3, -2,-2,-2, -1,-1,-1]  
-pN1 = [None,None,-7, None,None,-6, None,None,-5, None,None,-4, None,None,-3, None,None,-2, None,None,-1]
-
-# pN2 starts (counting backward) from -2 instead of -1 because the next number in the current
-# numbering N3 is 0, but logically there's actually a gap between the two events, if they do occur
-# on those numbers, so we don't want the algorithm to treat them as consecutive
-# (but what if we're also looking at min/max consecutive weekends? ... sth for Future Kelvin to ponder)
-# (Maybe that's just be another numbering, albeit similar to this...)
-pN2 = [None,None,None, None,None,None, None,None,None, None,None,None, None,None,None, -3,-3,-3, -2,-2,-2]
-
-# prev_events = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
-# events = [1,0,0, 1,0,0, 0,1,0, 0,1,0, 0,0,1, 0,0,0, 0,0,0]
-N0 = [0,0,0, 1,1,1, 2,2,2, 3,3,3, 4,4,4, 5,5,5, 6,6,6]  
-N1 = [None,None,0, None,None,1, None,None,2, None,None,3, None,None,4, None,None,5, None,None,6]  
-N2 = [None,None,None, None,None,None, None,None,None, None,None,None, None,None,None, 0,0,0, 1,1,1]
- 
 # For each numbering, the positive integer M representing the last number in the number sequence.
 # This is what makes up the set {-M-1, −M, −M+1, ..., 0, 1, ..., M−1, M, U} to which a numbering maps
 # this set is erroneously represented in (Burke)

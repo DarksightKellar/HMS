@@ -1,8 +1,9 @@
 from helper_classes.shift import Shift
 from helper_classes.nurse import Nurse
 from helper_classes.skills import *
-from fitness_evaluation.eval import evaluate 
-from fitness_evaluation.constraints import N0, N1, N2, pN0, pN1, pN2, M_LIST
+from helper_classes.constants import N_DAYS, N_SHIFTS
+from fitness_evaluation.eval import evaluate
+from fitness_evaluation.numbering import Numbering
 
 
 def evaluate_harmony(harmony):
@@ -53,10 +54,18 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
 
     for schedule in solution:
         prev_schedule = prev_solution[i]
-        numberings = [N0, N1, N2]
-        prev_numberings = [pN0, pN1, pN2]
 
-        res = evaluate(schedule, prev_schedule, numberings, prev_numberings)
+        # TODO: numberings should come from contract: __numberings__ = contracts[i].numberings
+        __numberings__ = [
+            Numbering.consecutive_days(N_DAYS, N_SHIFTS),
+            Numbering.consecutive_night_shifts(N_DAYS, N_SHIFTS),
+            Numbering.weekend(N_DAYS, N_SHIFTS)
+        ]
+        numberings = [n.get_numberings() for n in __numberings__]
+        prev_numberings = [n.get_previous() for n in __numberings__]
+        m_list = [n.get_M() for n in __numberings__]
+
+        res = evaluate(schedule, prev_schedule, numberings, prev_numberings, m_list)
 
         for per_t in res['per_t'][0]:
             if per_t > 1:
