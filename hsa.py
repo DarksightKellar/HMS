@@ -6,9 +6,9 @@ from helper_classes.constants import *
 
 HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
 PITCH_ADJUSTMENT_RATE = 0.5
-N_IMROVISATIONS = 10
-PLATEAU_THRESHOLD = 5 # but quit early after this number of iterations without improvement
-HARMONY_MEMORY_SIZE = 8
+N_IMROVISATIONS = 20000
+PLATEAU_THRESHOLD = 5000 # but quit early after this number of iterations without improvement
+HARMONY_MEMORY_SIZE = 10
 
 class HarmonySearch():
     def __init__(self, HMCR=HARMONY_MEMORY_CONSIDERATION_RATE, PAR=PITCH_ADJUSTMENT_RATE,
@@ -70,8 +70,8 @@ class HarmonySearch():
         
         for i in range(self.hm_size):
             soln_and_cost = ordering(shifts, nurses)
-            print('cost', soln_and_cost[1])
             self.harmony_memory.append(soln_and_cost)
+            print(".", end = '')
 
 
     def improvise_harmony(self):
@@ -136,9 +136,9 @@ class HarmonySearch():
                         new_harmony[instrument_i] = selected_instrument
                         new_harmony[rand_scheduled_idx] = schedule
 
-                    if swap_days:
+                    if swap_days and 1 in schedule:
                         from math import ceil
-
+                            
                         # select random assigned day in the schedule
                         indx = random.randint(0, self.n_allocations-1)
                         while schedule[indx] is not 1:
@@ -154,19 +154,30 @@ class HarmonySearch():
                         # that is also on a day different from that selected from schedule
                         sel_indx = random.randint(0, self.n_allocations-1)
                         sel_day_number = ceil((sel_indx+1) / N_SHIFTS)
-
-                        while selected_instrument[sel_indx] is not 1 or day_number is sel_day_number:
+                        
+                        n_attempts = 0
+                        while (
+                            selected_instrument[sel_indx] is not 1 
+                            or day_number is sel_day_number 
+                        ):
                             sel_indx = random.randint(0, self.n_allocations-1)
                             sel_day_number = ceil((sel_indx+1) / N_SHIFTS)
 
-                        # Now swap the assignments for these days
-                        schedule[sel_indx] = 1
-                        schedule[indx] = 0
+                            # Break early if we can't seem to find a valid swap
+                            n_attempts += 1
+                            if n_attempts > self.n_allocations * 10:
+                                break
 
-                        selected_instrument[sel_indx] = 0
-                        selected_instrument[indx] = 1    
+                        # Now swap the assignments for these days,
+                        #  if a valid swap was found
+                        if n_attempts < self.n_allocations * 10:
+                            schedule[sel_indx] = 1
+                            schedule[indx] = 0
 
-            # else: # randomise instrument decision vars
+                            selected_instrument[sel_indx] = 0
+                            selected_instrument[indx] = 1    
+
+            # else: # TODO: randomise instrument decision vars
             #     for decision_var_i in range(self.n_allocations):
             #         # RESEARCH POINT: tend these assignements toward improving cost
             #         # (means I'll have to rather track instruments for which HM wasn't 
@@ -174,7 +185,7 @@ class HarmonySearch():
             #         new_harmony[instrument_i][decision_var_i] = random.randint(0, 1)
 
         self.improvisations_done += 1
-        
+
         return new_harmony
 
     def update_memory(self, harmony):

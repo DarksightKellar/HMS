@@ -2,27 +2,32 @@
 from instance import *
 from hsa import HarmonySearch
 
-print('Setting up instance...')
 
 # 1. Initialise problem and params
+print('\nSetting up Problem Instance...\n')
 instance = Instance.create_test_instance()
 
 hsa = HarmonySearch()
 
 # 2. Initialise HM
-print('setting up Harmony Search...')
+print('Initialising Harmony Memory...')
 hsa.setup(instance)
 
+print(' [DONE]\n\nInitial harmony memory costs:')
+print([c[1] for c in hsa.harmony_memory])
+
+print('\nRunning algorithm')
+n_runs = 0
 while hsa.check_stop_criterion():
     # 3. Improvise new Harmony
-    print('Improvising new harmony...')
     new_harmony = hsa.improvise_harmony()
     
     # 4. Update harmony memory
-    print('Updating harmony memory...')
     hsa.update_memory([schedule.copy() for schedule in new_harmony])
+    n_runs += 1
 
-print('done')
-from helper_classes.evaluate import evaluate_solution
-cost = evaluate_solution(new_harmony, hsa.instance.shifts)
-print(cost)
+    if n_runs%1000 == 0:
+        print(".", end = '')
+
+print(' [DONE]\n\nFinal harmony memory costs:')
+print([c[1] for c in hsa.harmony_memory])
