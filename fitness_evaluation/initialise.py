@@ -76,18 +76,3 @@ def initialise(Numberings, prev_schedule, M_List):
     # print('initial values')
     # pp.pprint(values)
     return values
-
-
-if __name__ == '__main__':
-    from constraints import M_LIST, pN0, pN1, pN2
-
-    prev_numberings = [pN0, pN1, pN2]
-
-    prev_personal_schedule1 = [0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 1,0,0, 1,0,0]
-    prev_personal_schedule2 = [1,0,0, 0,0,1, 0,0,1, 0,0,0, 0,0,0, 0,0,0, 0,0,1]
-    prev_solution = [prev_personal_schedule1, prev_personal_schedule2]
-
-    A = initialise(prev_numberings, prev_personal_schedule1, M_LIST)
-    # B = initialise(prev_numberings, prev_personal_schedule2, M_LIST)
-    pp.pprint(A)
-    # print(B)

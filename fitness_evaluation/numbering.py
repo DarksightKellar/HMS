@@ -9,13 +9,13 @@ class Numbering():
         self.n_days = n_days
         self.n_shifts = n_shifts
 
-    def get(self):
+    def get_numberings(self):
         return self.n
 
     def get_previous(self):
         return self.p
 
-    def get_numbering(self, time_slot):
+    def get_numbering_at(self, time_slot):
         '''
         Get numbering at `time_slot`
         '''
@@ -26,7 +26,7 @@ class Numbering():
         '''
         Get the numbering of the `n`th event in `schedule`
 
-        Returns `None` if there is no `n`th event
+        Returns `False` if there is no `n`th event
         '''
         events_encountered = 0
         event_index = -1
@@ -46,7 +46,7 @@ class Numbering():
 
                 search_start_index = event_index + 1
             except ValueError as e:
-                return None
+                return False
             
         return self.n[event_index]
 
@@ -141,7 +141,13 @@ class Numbering():
         prev_numbering = []
 
         number = 0
-        prev_number = -1
+        
+        # prev_number starts (counting backward) from -2 instead of -1 because the next number in the current
+        # numbering would be 0, but logically there's actually a gap between the two events, if they do occur
+        # on those numbers, so we don't want the algorithm to treat them as consecutive
+        # (but what if we're also looking at min/max consecutive weekends? ... sth for Future Kelvin to ponder)
+        # (Maybe that's just be another numbering, albeit similar to this...)
+        prev_number = -2
         for i in range(n_days * n_shifts):
             n = floor(i/n_shifts)
 
