@@ -115,7 +115,7 @@ class HarmonySearch():
                         if idx not in already_scheduled_idxs:
                             free_idxs.append(idx)
 
-                    if move and len(free_idxs != 0):
+                    if move and len(free_idxs) != 0:
                         # randomly select a free instrument
                         rand_free_idx = random.sample(free_idxs, 1)[0]
                         selected_instrument = new_harmony[rand_free_idx]
