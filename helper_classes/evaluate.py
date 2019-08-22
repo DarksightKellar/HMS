@@ -2,6 +2,7 @@ from helper_classes.shift import Shift
 from helper_classes.nurse import Nurse
 from helper_classes.skills import *
 from helper_classes.constants import N_DAYS, N_SHIFTS
+from helper_classes.contract import Contract
 from fitness_evaluation.eval import evaluate
 from fitness_evaluation.numbering import Numbering
 
@@ -52,20 +53,25 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
     if len(prev_solution) == 0:
         prev_solution = [[0 for _ in range(len(shifts))] for _ in range(len(solution))]
 
+    if len(contracts) == 0:
+        contracts = [Contract() for _ in range(len(solution))]
+
     for schedule in solution:
         prev_schedule = prev_solution[i]
 
         # TODO: numberings should come from contract: __numberings__ = contracts[i].numberings
-        __numberings__ = [
-            Numbering.consecutive_days(N_DAYS, N_SHIFTS),
-            Numbering.consecutive_night_shifts(N_DAYS, N_SHIFTS),
-            Numbering.weekend(N_DAYS, N_SHIFTS)
-        ]
+        contract: Contract = contracts[i]
+        __numberings__ = contract.numberings
+        # [
+        #     Numbering.consecutive_days(N_DAYS, N_SHIFTS),
+        #     Numbering.consecutive_night_shifts(N_DAYS, N_SHIFTS),
+        #     Numbering.weekend(N_DAYS, N_SHIFTS)
+        # ]
         numberings = [n.get_numberings() for n in __numberings__]
         prev_numberings = [n.get_previous() for n in __numberings__]
         m_list = [n.get_M() for n in __numberings__]
 
-        res = evaluate(schedule, prev_schedule, numberings, prev_numberings, m_list)
+        res = evaluate(schedule, prev_schedule, __numberings__)
 
         for per_t in res['per_t'][0]:
             if per_t > 1:

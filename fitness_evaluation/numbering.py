@@ -1,17 +1,66 @@
 from math import ceil, floor
+from fitness_evaluation.costs import *
+from fitness_evaluation.constants import *
 
 
 class Numbering():
-    def __init__(self, numbers, prev_numbers, n_days, n_shifts):
+    def __init__(self, 
+        numbers,
+        prev_numbers,
+        n_days,
+        n_shifts,
+
+        cost_min_total = COST_MIN_TOTAL,
+        cost_max_total = COST_MAX_TOTAL,
+        cost_min_pert = COST_MIN_PERT,
+        cost_max_per = COST_MAX_PERT,
+        cost_min_between = COST_MIN_BETWEEN,
+        cost_max_between = COST_MAX_BETWEEN,
+        cost_min_consecutive = COST_MIN_CONSECUTIVE,
+        cost_max_consecutive = COST_MAX_CONSECUTIVE,
+        
+        min_total = MIN_TOTAL,
+        max_total = MAX_TOTAL,
+        min_consecutive = MIN_CONSECUTIVE,
+        max_consecutive = MAX_CONSECUTIVE,
+        min_between = MIN_BETWEEN,
+        max_between = MAX_BETWEEN
+    ):
         self.n = numbers
         self.p = prev_numbers
-        self.n_allocations = n_days * n_shifts
         self.n_days = n_days
         self.n_shifts = n_shifts
+        self.n_allocations = n_days * n_shifts
         
+        # Costs associated with this Numbering
+        self.cost_min_total = cost_min_total
+        self.cost_max_total = cost_max_total
+        
+        self.cost_min_pert = 1
+        self.cost_max_pert = 1
+        
+        self.cost_min_between = cost_min_between
+        self.cost_max_between = cost_max_between
+        
+        self.cost_min_consecutive = cost_min_consecutive
+        self.cost_max_consecutive = cost_max_consecutive
+
+        # upper, lower limits for number of events
+        self.min_total = min_total
+        self.max_total = max_total
+
+        # maximum, minimum number of consecutive events
+        self.min_consecutive = min_consecutive
+        self.max_consecutive = max_consecutive
+
+        # maximum, minimum gap between two non-consecutive events
+        self.min_between = 0
+        self.max_between = 3
+        
+        # minimum, maximum number of events mappable to each numbering
         M = self.get_M()
-        self.max_per_t = [1 for _ in range(M+1)]
         self.min_per_t = [0 for _ in range(M+1)]
+        self.max_per_t = [1 for _ in range(M+1)]
 
     def get_numberings(self):
         return self.n
@@ -85,13 +134,13 @@ class Numbering():
         '''
         return self.getMaxNumbering()
 
-    def set_max_per_t(self, t, val):
+    def set_max_per_t(self, nr, limit):
         # Useful for day and/or shift off request constraints (set to 0)
-        self.max_per_t[t] = val
+        self.max_per_t[nr] = limit
 
-    def set_min_per_t(self, t, val):
+    def set_min_per_t(self, nr, limit):
         # Useful for day and/or shift on request constraints (set to 1)
-        self.min_per_t[t] = val
+        self.min_per_t[nr] = limit
 
     def get_first_numbering(self):
         '''

@@ -5,23 +5,19 @@ from fitness_evaluation.helpers import get_nth_event_numberings
 
 
 # Every personal schedule is evaluated separately
-def evaluate(schedule, prev_schedule, numberings, prev_numberings, M_LIST):
+def evaluate(schedule, prev_schedule, numberings):
     # initialise counter values
-    values = initialise(prev_numberings, prev_schedule, M_LIST)
+    values = initialise(numberings, prev_schedule)
     cost = 0
 
-    # get numberings of first event in `events_in_schedule`
+    # Till we run out of events to check, run intermediate evaluation on each event in schedule
     event_n = 1
-    event_numberings = get_nth_event_numberings(event_n, schedule, numberings)
-    
-    # Till end of solution
-    while event_numberings is not None:
+    while True:
         # update all numbering counters with intermediate evaluation
-        intermediate_evaluation(numberings, event_numberings, values)
+        if intermediate_evaluation(numberings, values, schedule, event_n) == 'no event':
+            break
 
-        # get numbering of next event in planning period
         event_n += 1
-        event_numberings = get_nth_event_numberings(event_n, schedule, numberings)
 
     # perform final evaluation
     final_evaluation(numberings, values)

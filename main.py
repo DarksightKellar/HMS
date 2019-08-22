@@ -31,3 +31,5 @@ while hsa.check_stop_criterion():
 
 print(' [DONE]\n\nFinal harmony memory costs:')
 print([c[1] for c in hsa.harmony_memory])
+
+print(str.format('\n\n{} iterations', n_runs))

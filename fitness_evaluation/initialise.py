@@ -1,11 +1,13 @@
 import pprint as pp
 from fitness_evaluation.helpers import *
+from fitness_evaluation.numbering import Numbering
 
 
-def initialise(Numberings, prev_schedule, M_List):
+def initialise(Numberings, prev_schedule):
     numbering_count = len(Numberings)
 
     initial_zeroes = [0 for _ in range(numbering_count)]
+    M_List = [n.get_M() for n in Numberings]
 
     values = {
         'last_nr': [None for _ in range(numbering_count)],
@@ -27,7 +29,8 @@ def initialise(Numberings, prev_schedule, M_List):
     }
 
     i = 0
-    for numbering in Numberings:
+    prev_numberings = [n.get_previous() for n in Numberings]
+    for numbering in prev_numberings:
         numbering_initialised = False
 
         last_nr = getMinNumbering(numbering)
