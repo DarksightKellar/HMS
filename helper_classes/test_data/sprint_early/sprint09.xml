@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<SchedulingPeriod nDays=28 ID="sprint09" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="competition.xsd">
+<SchedulingPeriod nDays='28' ID="sprint09" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="competition.xsd">
   <StartDate>2010-01-01</StartDate>
   <EndDate>2010-01-28</EndDate>
   <Skills>
     <Skill>Nurse</Skill>
   </Skills>
   <ShiftTypes>
-    <Shift ID="E">
+    <Shift ID="E" weight='3'>
       <StartTime>06:30:00</StartTime>
       <EndTime>14:30:00</EndTime>
       <Description>Early</Description>
@@ -14,7 +14,7 @@
         <Skill>Nurse</Skill>
       </Skills>
     </Shift>
-    <Shift ID="L">
+    <Shift ID="L" weight='2'>
       <StartTime>14:30:00</StartTime>
       <EndTime>22:30:00</EndTime>
       <Description>Late</Description>
@@ -22,7 +22,7 @@
         <Skill>Nurse</Skill>
       </Skills>
     </Shift>
-    <Shift ID="D">
+    <Shift ID="D" weight='1'>
       <StartTime>08:30:00</StartTime>
       <EndTime>16:30:00</EndTime>
       <Description>Day shift</Description>
@@ -30,7 +30,7 @@
         <Skill>Nurse</Skill>
       </Skills>
     </Shift>
-    <Shift ID="N">
+    <Shift ID="N" weight='4'>
       <StartTime>22:30:00</StartTime>
       <EndTime>06:30:00</EndTime>
       <Description>Night</Description>

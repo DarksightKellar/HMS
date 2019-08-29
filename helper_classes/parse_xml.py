@@ -18,6 +18,7 @@ def parseXML(xmlfile):
     shift_types = []
     shift_skills = []
     shift_ids = []
+    shift_weights = []
     patterns = []
     contracts = []
     nurses = []
@@ -36,6 +37,7 @@ def parseXML(xmlfile):
         shift_types.append(shift.find('Description').text)
         shift_skills.append([Skill(sk.text) for sk in shift.findall('Skills/Skill')])
         shift_ids.append(shift.attrib['ID'])
+        shift_weights.append(int(shift.attrib['weight']))
 
     # retrieve patterns
     for pattern in root.findall('./Patterns/Pattern'):
@@ -105,6 +107,7 @@ def parseXML(xmlfile):
         'shift_types': shift_types,
         'shift_skills': shift_skills,
         'shift_ids': shift_ids,
+        'shift_weights': shift_weights,
         'patterns': patterns,
         'contracts': contracts,
         'nurses': nurses,
