@@ -6,7 +6,7 @@ from helper_classes.constants import *
 
 HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
 PITCH_ADJUSTMENT_RATE = 0.5
-N_IMROVISATIONS = 20000
+N_IMROVISATIONS = 100000
 PLATEAU_THRESHOLD = 5000 # but quit early after this number of iterations without improvement
 HARMONY_MEMORY_SIZE = 10
 
@@ -21,7 +21,7 @@ class HarmonySearch():
         self.improvisations_done = 0
         self.n_improvisations_without_improvement = 0
 
-        # harmony_memory: list of memorised decision variable values, 
+        # harmony_memory: list of memorised decision variable values,
         # with costs: [soln, cost]
         self.harmony_memory = []
 
@@ -176,13 +176,12 @@ class HarmonySearch():
 
                             selected_instrument[sel_indx] = 0
                             selected_instrument[indx] = 1    
-
-            # else: # TODO: randomise instrument decision vars
-            #     for decision_var_i in range(self.n_allocations):
-            #         # RESEARCH POINT: tend these assignements toward improving cost
-            #         # (means I'll have to rather track instruments for which HM wasn't 
-            #         # considered,then for each, attempt setting decision variables)
-            #         new_harmony[instrument_i][decision_var_i] = random.randint(0, 1)
+            else: # randomise instrument decision vars
+                for decision_var_i in range(self.n_allocations):
+                    # RESEARCH POINT: tend these assignements toward improving cost
+                    # (means I'll have to rather track instruments for which HM wasn't 
+                    # considered,then for each, attempt setting decision variables)
+                    new_harmony[instrument_i][decision_var_i] = random.randint(0, 1)
 
         self.improvisations_done += 1
 
