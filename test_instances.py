@@ -4,7 +4,7 @@ from helper_classes.nurse import *
 from helper_classes.skills import *
 from helper_classes.parse_xml import parseXML
 
-def create_instance(self):
+def create_instance():
     data = parseXML('helper_classes/test_data/sprint_early/sprint01.xml')
     '''
     data = {
@@ -13,6 +13,7 @@ def create_instance(self):
         'shift_types': shift_types,
         'shift_skills': shift_skills,
         'shift_ids': shift_ids,
+        'shift_weights': shift_weights,
         'patterns': patterns,
         'contracts': contracts,
         'nurses': nurses,
@@ -33,9 +34,15 @@ def create_instance(self):
 
     skills = data['skills']
     shift_types = data['shift_types']
+    shift_skills = data['shift_skills']
+    shift_weights = data['shift_weights']
+
+    assert(len(shift_types) == len(shift_skills))
+    assert(len(shift_skills) == len(shift_weights))
+
     scheduling_period = N_DAYS
 
-    n_weeks = N_DAYS / 7
+    n_weeks = int(N_DAYS / 7)
     cover_request_matrix = data['cover_requirements'] * n_weeks
 
     patterns = data['patterns']
@@ -44,15 +51,13 @@ def create_instance(self):
     #   0    - request off
     #   1    - request on
     #   None - no request made for that shift
-    day_request_matrix = [None for _ in range(N_DAYS) for _ in range(len(nurses))]
-    # day_on_matrix = [None for _ in range(N_DAYS) for _ in range(len(nurses))]
-    shift_request_matrix = [None for _ in range(N_ALLOCATIONS) for _ in range(len(nurses))]
-    # shift_on_matrix = [None for _ in range(N_ALLOCATIONS) for _ in range(len(nurses))]
+    day_request_matrix = [[None for _ in range(N_DAYS)] for _ in range(len(nurses))]
+    shift_request_matrix = [[None for _ in range(N_ALLOCATIONS)] for _ in range(len(nurses))]
 
     for day_off_request in data['day_off_requests']:
         # [day_number, nurse_id, weight]
         day_index = day_off_request[0] - 1
-        nurse_index = day_off_request[1]
+        nurse_index = int(day_off_request[1])
         weight = day_off_request[2]
 
         # Update matrix to add this request
@@ -62,7 +67,7 @@ def create_instance(self):
         # [day_number, shift_id, nurse_id, weight]
         day_number = shift_off_request[0]
         shift_id = shift_off_request[1]
-        nurse_index = shift_off_request[2]
+        nurse_index = int(shift_off_request[2])
         weight = shift_off_request[3]
 
         
@@ -79,41 +84,28 @@ def create_instance(self):
         # Update matrix to add this request
         shift_request_matrix[nurse_index][shift_index] = 0
 
+    # generate indices of shifts belonging to weekend 
+    weekend_indices = []
+    n_weeks = int(N_ALLOCATIONS / 7 / N_SHIFTS)
+    for week_n in range(n_weeks):
+        start_idx = N_SHIFTS * ((week_n+1) * 7) - 2*N_SHIFTS
+        end_idx = start_idx + 2*N_SHIFTS - 1
+
+        for idx in range(start_idx, end_idx+1):
+            weekend_indices.append(idx)
+
     # create weighted shifts
     shifts = []
-
     for i in range(N_ALLOCATIONS):
-        is_morning_shift = i % 3 == 0
-        is_afternoon_shift = i % 3 == 1
-        is_night_shift = i % 3 == 2
+        shift_type_index = i % N_SHIFTS
 
-        is_weekend = i % 21 in [15,16,17,18,19,20]
+        is_weekend = i in weekend_indices
 
-        shift = 'morning' if is_morning_shift else 'afternoon' if is_afternoon_shift else 'night'
-        nurses_required = 3 if is_morning_shift else 5 if is_afternoon_shift else 2
-        weight = 0
+        nurses_required = cover_request_matrix[i]
+        weight = shift_weights[shift_type_index]
 
-        # different nurse requirements for weekend shifts
-        if is_weekend:
-            nurses_required = 1 if is_night_shift else 2
-
-        # skills_required specify the minimum number required for the shift
-        # Aside that, all base nurses count toward the total staff requirement
-        skills_required = [
-            SkillRequired(NurseSkill, nurses_required, COST_NURSE_REQ)
-        ]
-
-        if is_night_shift:
-            # require one qualified nursing officer on night shifts
-            skills_required.append(SkillRequired(NursingOfficerSkill, 1, COST_NURSING_OFFICER_REQ))
-            weight += NIGHT_SHIFT_WEIGHT
-
-            n_valid_nurses = count_skills(nurses, skills_required)
-            n_nurses = len(nurses)
-
-            # add weight to this new requirement
-            extra_weight = (n_nurses/n_valid_nurses) * SKILL_WEIGHT
-            weight += extra_weight
+        _skills = shift_skills[shift_type_index]
+        skills_required = [SkillRequired(skill, nurses_required, 1) for skill in _skills]
         
         if is_weekend:
             weight += WEEKEND_SHIFT_WEIGHT
@@ -126,7 +118,7 @@ def create_instance(self):
 
         shifts.append(Shift(
             index=i,
-            shift_type=shift,
+            shift_type=shift_types[shift_type_index],
             skills_required=skills_required,
             n_nurses_required=nurses_required, 
             weight=weight,
@@ -135,4 +127,4 @@ def create_instance(self):
 
     return Instance(nurses, shifts, contracts, skills, 
         shift_types, scheduling_period, cover_request_matrix, 
-        day_request_matrix, [], shift_request_matrix, [])
+        day_request_matrix, shift_request_matrix)

@@ -29,12 +29,14 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
     assert(n_shifts == nurses[0].n_allocations)
 
     final_schedule = []
+    contracts = [n.contract for n in nurses]
 
     # Apply weight evaluation function to each shift's weight
     # to determine assignment difficulty
     for shift in shifts:
-        shift.evaluate()
-        _shifts.append(shift.duplicate())
+        _shift = shift.duplicate()
+        _shift.evaluate()
+        _shifts.append(_shift)
 
     # Sort shifts (decreasing order of assignment difficulty)
     sorted_shifts = sorted(_shifts, key=lambda shift: shift.assignment_difficulty, reverse=True)
@@ -71,7 +73,7 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
             nurse.assign(shift)
 
 
-            cost = evaluate_solution([n.allocations for n in _nurses], _shifts)
+            cost = evaluate_solution([n.allocations for n in _nurses], _shifts, contracts=contracts)
             if shift_best_cost is None:
                 shift_best_cost = cost
             

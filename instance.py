@@ -2,32 +2,31 @@ from helper_classes.constants import *
 from math import ceil
 from helper_classes.nurse import *
 from helper_classes.skills import *
+from helper_classes.contract import Contract
 
 
 class Instance():
     def __init__(self, nurses, shifts, contracts, skills, shift_types, scheduling_period, cover_request_matrix,
-                day_off_matrix, day_on_matrix, shift_off_matrix, shift_on_matrix):
+                day_request_matrix, shift_request_matrix):
         self.nurses = nurses
         self.shifts = shifts
         self.contracts = contracts
         self.skills = skills
         self.shift_types = shift_types  # set of possible shift types
         self.scheduling_period = scheduling_period  # ie, number of days per period
-        self.cover_request_matrix = cover_request_matrix  # is this the demand?
-        self.day_off_matrix = day_off_matrix
-        self.day_on_matrix = day_on_matrix
-        self.shift_off_matrix = shift_off_matrix
-        self.shift_on_matrix = shift_on_matrix
+        self.cover_request_matrix = cover_request_matrix
+        self.day_request_matrix = day_request_matrix
+        self.shift_request_matrix = shift_request_matrix
 
     @classmethod
     def create_test_instance(self):
         # create 10 nurses, including 2 NOs
         nurses = []
         for i in range(8):
-            nurses.append(Nurse(id, last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill]))
+            nurses.append(Nurse(id, contract=Contract(), last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill]))
 
         for i in range(2):
-            nurses.append(Nurse(id, last_name=str.format('Baako{}',i), other_names=str.format('{}Ama',i), skills=[NurseSkill, NursingOfficerSkill]))
+            nurses.append(Nurse(id, contract=Contract(), last_name=str.format('Baako{}',i), other_names=str.format('{}Ama',i), skills=[NurseSkill, NursingOfficerSkill]))
 
         contracts = []
 
@@ -36,10 +35,8 @@ class Instance():
         scheduling_period = N_DAYS
 
         cover_request_matrix = []
-        day_off_matrix = []
-        day_on_matrix = []
-        shift_off_matrix = []
-        shift_on_matrix = []
+        day_request_matrix = []
+        shift_request_matrix = []
 
         # create weighted shifts
         shifts = []
@@ -97,5 +94,5 @@ class Instance():
 
         return Instance(nurses, shifts, contracts, skills, 
             shift_types, scheduling_period, cover_request_matrix, 
-            day_off_matrix, day_on_matrix, shift_off_matrix, shift_on_matrix)
+            day_request_matrix, shift_request_matrix)
 

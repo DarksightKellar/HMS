@@ -32,12 +32,10 @@ class HarmonySearch():
         skills = instance.skills
         shifts = instance.shifts
         shift_types = instance.shift_types  # set of possible shift types
-        period = instance.scheduling_period  # ie, number of days per period
-        cover_requests = instance.cover_request_matrix  # is this the demand?
-        day_offs = instance.day_off_matrix
-        day_ons = instance.day_on_matrix
-        shift_offs = instance.shift_off_matrix
-        shift_ons = instance.shift_on_matrix
+        period = instance.scheduling_period  # number of days per period
+        cover_requests = instance.cover_request_matrix
+        day_requests = instance.day_request_matrix
+        shift_requests = instance.shift_request_matrix
 
         if setParams:
             self.setParams(params['hmcr'], params['par'],
@@ -188,7 +186,8 @@ class HarmonySearch():
         return new_harmony
 
     def update_memory(self, harmony):
-        cost = evaluate_solution(harmony, self.instance.shifts)
+        contracts = [n.contract for n in self.instance.nurses]
+        cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
 
         if cost is None:
             return

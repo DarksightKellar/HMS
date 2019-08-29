@@ -3,13 +3,13 @@ from helper_classes.constants import *
 
 class Nurse():
 
-    def __init__(self, id, last_name, other_names, skills, contract=None, nurse_id=None):
+    def __init__(self, id, last_name, other_names, skills, contract=None, nurse_id=None, n_allocations=N_ALLOCATIONS):
         self.id = id
         self.last_name = last_name
         self.other_names = other_names
         self.skills = skills
-        self.n_allocations = N_ALLOCATIONS
-        self.allocations = [0 for _ in range(N_ALLOCATIONS)]
+        self.n_allocations = n_allocations
+        self.allocations = [0 for _ in range(n_allocations)]
         self.has_no_allocations = True
         self.n_assignments = 0
         self.contract = contract
@@ -32,4 +32,4 @@ class Nurse():
         self.has_no_allocations = self.n_assignments == 0
 
     def duplicate(self):
-        return Nurse(id, self.last_name, self.other_names, self.skills, self.contract, self.nurse_id)
+        return Nurse(id, self.last_name, self.other_names, self.skills, self.contract, self.nurse_id, self.n_allocations)

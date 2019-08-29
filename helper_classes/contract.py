@@ -7,11 +7,9 @@ class Contract():
             limit_total=[MIN_TOTAL, MAX_TOTAL], 
             limit_consecutive=[MIN_CONSECUTIVE, MAX_CONSECUTIVE], 
             limit_between=[MIN_BETWEEN, MAX_BETWEEN],
-            numberings=[
-                Numbering.consecutive_days(N_DAYS, N_SHIFTS),
-                Numbering.consecutive_night_shifts(N_DAYS, N_SHIFTS),
-                Numbering.weekend(N_DAYS, N_SHIFTS)
-            ]
+            n_days=N_DAYS,
+            n_shifts=N_SHIFTS,
+            numberings=None
         ):
 
         self.min_total = limit_total[0]
@@ -23,5 +21,12 @@ class Contract():
         self.min_between = limit_between[0]
         self.max_between = limit_between[1]
 
+        if numberings is None:
+            numberings = [
+                Numbering.consecutive_days(n_days, n_shifts),
+                Numbering.consecutive_night_shifts(n_days, n_shifts),
+                Numbering.weekend(n_days, n_shifts)
+            ]
+            
         self.numberings = numberings
         self.n_numberings = len(numberings)
