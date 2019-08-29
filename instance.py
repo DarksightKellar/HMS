@@ -24,10 +24,10 @@ class Instance():
         # create 10 nurses, including 2 NOs
         nurses = []
         for i in range(8):
-            nurses.append(Nurse(id, last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill], max_assignments=5))
+            nurses.append(Nurse(id, last_name=str.format('Mansa{}',i), other_names=str.format('{}Yaa',i), skills=[NurseSkill]))
 
         for i in range(2):
-            nurses.append(Nurse(id, last_name=str.format('Baako{}',i), other_names=str.format('{}Ama',i), skills=[NurseSkill, NursingOfficerSkill], max_assignments=5))
+            nurses.append(Nurse(id, last_name=str.format('Baako{}',i), other_names=str.format('{}Ama',i), skills=[NurseSkill, NursingOfficerSkill]))
 
         contracts = []
 
