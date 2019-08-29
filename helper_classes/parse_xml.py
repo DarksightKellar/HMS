@@ -29,14 +29,14 @@ def parseXML(xmlfile):
 
     # retrieve skills
     for skill in root.findall('./Skills/Skill'):
-        skills.append(Skill(skill.text))
+        skills.append(Skill(str(skill.text)))
 
     # retrieve shift types, and associated required skills
     for shift in root.findall('./ShiftTypes/Shift'):
         # for shift in st.findall('Shift'):
-        shift_types.append(shift.find('Description').text)
-        shift_skills.append([Skill(sk.text) for sk in shift.findall('Skills/Skill')])
-        shift_ids.append(shift.attrib['ID'])
+        shift_types.append(str(shift.find('Description').text))
+        shift_skills.append([Skill(str(sk.text)) for sk in shift.findall('Skills/Skill')])
+        shift_ids.append(str(shift.attrib['ID']))
         shift_weights.append(int(shift.attrib['weight']))
 
     # retrieve patterns
@@ -45,14 +45,14 @@ def parseXML(xmlfile):
 
     # retrieve contracts
     for contract in root.findall('./Contracts/Contract'):
-        min_total = contract.find('MinNumAssignments').text
-        max_total = contract.find('MaxNumAssignments').text
+        min_total = int(contract.find('MinNumAssignments').text)
+        max_total = int(contract.find('MaxNumAssignments').text)
 
-        min_consecutive = contract.find('MinConsecutiveWorkingDays').text
-        max_consecutive = contract.find('MaxConsecutiveWorkingDays').text
+        min_consecutive = int(contract.find('MinConsecutiveWorkingDays').text)
+        max_consecutive = int(contract.find('MaxConsecutiveWorkingDays').text)
         
-        min_between = contract.find('MinConsecutiveFreeDays').text
-        max_between = contract.find('MaxConsecutiveFreeDays').text
+        min_between = int(contract.find('MinConsecutiveFreeDays').text)
+        max_between = int(contract.find('MaxConsecutiveFreeDays').text)
 
         contracts.append(Contract(
             limit_total=[min_total, max_total],
@@ -65,7 +65,7 @@ def parseXML(xmlfile):
     # retrieve nurses
     for n in root.findall('./Employees/Employee'):
         names = str(n.find('Name').text).split(' ')
-        nurse_skills = [ Skill(sk.text) for sk in n.find('Skills') ]
+        nurse_skills = [ Skill(str(sk.text)) for sk in n.find('Skills') ]
         contract_id = int(n.find('ContractID').text)
         nurse_id = str(n.attrib['ID'])
 
