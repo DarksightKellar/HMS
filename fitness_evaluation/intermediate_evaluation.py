@@ -1,4 +1,3 @@
-from fitness_evaluation.constraints import *
 from fitness_evaluation.costs import *
 from fitness_evaluation.numbering import Numbering
 
