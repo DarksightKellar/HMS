@@ -58,6 +58,8 @@ def parseXML(xmlfile):
             limit_total=[min_total, max_total],
             limit_consecutive=[min_consecutive, max_consecutive],
             limit_between=[min_between, max_between],
+            n_days=number_of_days,
+            n_shifts=len(shift_types)
         ))
 
     # retrieve nurses
@@ -69,7 +71,8 @@ def parseXML(xmlfile):
 
         nurse = Nurse(
             id, names[len(names)-1], names[0:len(names)-1], 
-            nurse_skills, 5, contracts[contract_id], nurse_id=nurse_id
+            nurse_skills, contracts[contract_id],
+            nurse_id=nurse_id, n_allocations=number_of_days*len(shift_types)
         )
 
         nurses.append(nurse)
