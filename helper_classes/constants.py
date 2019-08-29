@@ -14,3 +14,5 @@ NursingOfficerSkill = Skill("Nursing Officer")
 
 COST_NURSE_REQ = 2
 COST_NURSING_OFFICER_REQ = 5
+
+# Numberings
