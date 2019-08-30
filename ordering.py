@@ -72,8 +72,8 @@ def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
             # assign this nurse to this shift
             nurse.assign(shift)
 
-
-            cost = evaluate_solution([n.allocations for n in _nurses], _shifts, contracts=contracts)
+            solution = [n.allocations for n in _nurses]
+            cost = evaluate_solution(solution, _shifts, contracts=contracts)
             if shift_best_cost is None:
                 shift_best_cost = cost
             

@@ -2,9 +2,10 @@ from fitness_evaluation.costs import *
 
 from fitness_evaluation.helpers import get_first_numbering
 from fitness_evaluation.numbering import Numbering
+from helper_classes.contract import Contract
 
 
-def final_evaluation(Numberings, values):
+def final_evaluation(Numberings, values, contract:Contract):
     numbering_i = 0
     for _numbering in Numberings:
         _numbering: Numbering
@@ -12,21 +13,21 @@ def final_evaluation(Numberings, values):
         if values['total'][ numbering_i] == 1:
             values['consecutive'][numbering_i] = 1
 
-        if values['total'][numbering_i] > _numbering.max_total:
+        if values['total'][numbering_i] > contract.max_total:
             values['penalty_max_total'][numbering_i] += _numbering.cost_max_total * \
-                (values['total'][numbering_i] - _numbering.max_total)
+                (values['total'][numbering_i] - contract.max_total)
 
-        if values['total'][numbering_i] < _numbering.min_total:
+        if values['total'][numbering_i] < contract.min_total:
             values['penalty_min_total'][numbering_i] += _numbering.cost_min_total * \
-                (_numbering.min_total - values['total'][numbering_i])
+                (contract.min_total - values['total'][numbering_i])
 
-        if values['consecutive'][numbering_i] > _numbering.max_consecutive:
+        if values['consecutive'][numbering_i] > contract.max_consecutive:
             values['penalty_max_consecutive'][numbering_i] += _numbering.cost_max_consecutive * \
-                (values['consecutive'][numbering_i] - _numbering.max_consecutive)
+                (values['consecutive'][numbering_i] - contract.max_consecutive)
 
-        if values['consecutive'][numbering_i] < _numbering.min_consecutive:
+        if values['consecutive'][numbering_i] < contract.min_consecutive:
             values['penalty_min_consecutive'][numbering_i] += _numbering.cost_min_consecutive * \
-                (_numbering.min_consecutive - values['consecutive'][numbering_i])
+                (contract.min_consecutive - values['consecutive'][numbering_i])
 
         prev_t = None
         for t in _numbering.get_numberings():
@@ -57,8 +58,8 @@ def final_evaluation(Numberings, values):
             max_numbering = _numbering.get_M()
             gap_to_end_of_period = _numbering.get_first_numbering() + max_numbering - last_nr
 
-            if gap_to_end_of_period > _numbering.max_between:
+            if gap_to_end_of_period > contract.max_between:
                 values['penalty_max_between'][numbering_i] += _numbering.cost_max_between * \
-                    gap_to_end_of_period - _numbering.max_between
+                    gap_to_end_of_period - contract.max_between
 
         numbering_i = numbering_i + 1

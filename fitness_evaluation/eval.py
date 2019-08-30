@@ -5,7 +5,7 @@ from fitness_evaluation.helpers import get_nth_event_numberings
 
 
 # Every personal schedule is evaluated separately
-def evaluate(schedule, prev_schedule, numberings):
+def evaluate(schedule, prev_schedule, numberings, contract):
     # initialise counter values
     values = initialise(numberings, prev_schedule)
     cost = 0
@@ -14,12 +14,12 @@ def evaluate(schedule, prev_schedule, numberings):
     event_n = 1
     while True:
         # update all numbering counters with intermediate evaluation
-        if intermediate_evaluation(numberings, values, schedule, event_n) == 'no event':
+        if intermediate_evaluation(numberings, values, schedule, event_n, contract) == 'no event':
             break
 
         event_n += 1
 
     # perform final evaluation
-    final_evaluation(numberings, values)
+    final_evaluation(numberings, values, contract)
     
     return values

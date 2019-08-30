@@ -16,9 +16,6 @@ def get_cost(vals):
     for c in vals['penalty_min_consecutive']:
         cost += c
 
-    for c in vals['penalty_min_consecutive']:
-        cost += c
-
     for c in vals['penalty_max_consecutive']:
         cost += c
 
@@ -66,8 +63,7 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
         prev_numberings = [n.get_previous() for n in __numberings__]
         m_list = [n.get_M() for n in __numberings__]
 
-        # TODO: Use `contract` in evaluation 
-        res = evaluate(schedule, prev_schedule, __numberings__)
+        res = evaluate(schedule, prev_schedule, __numberings__, contract)
 
         for per_t in res['per_t'][0]:
             if per_t > 1:
