@@ -78,17 +78,24 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
 
         res = evaluate(schedule, prev_schedule, __numberings__, contract)
 
+        # Infeasible solution if a nurse has multiple assignments for any day
         for per_t in res['per_t'][0]:
             if per_t > 1:
                 return None
 
+        
+
         total_cost += get_cost(res)
         i += 1
 
+    # check shift requirements
     for shift in shifts:
         shift: Shift
 
-        # check shift requirements
+        # Infeasible solution if a shift has no nurses assigned to it
+        if len(shift.assigned_nurses) == 0:
+            return None
+
         for requirement in shift.skills_required:
             requirement: SkillRequired
 
@@ -101,12 +108,13 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
 
             deficit = requirement.required - n_assigned_nurses_with_skill
 
-            # if shift.shift_type == 'night' and requirement.required == 1 and deficit
-            
+            # Under-staffing
             if deficit > 0:
-                total_cost += requirement.cost * deficit*deficit
+                total_cost += requirement.cost * deficit
 
+            # Over-staffing
             if deficit < -1 * (requirement.required / 2):
-                total_cost += -1 * deficit/2 * requirement.cost * 10
+                # total_cost += -1 * deficit/2 * requirement.cost * 10
+                total_cost += -1 * deficit * requirement.cost
 
     return total_cost
