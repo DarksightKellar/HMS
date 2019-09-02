@@ -29,7 +29,6 @@ def create_instance():
     N_SHIFTS = len(data['shift_types'])
     N_ALLOCATIONS = N_DAYS * N_SHIFTS
 
-    # create 10 nurses, including 2 NOs
     nurses = data['nurses']
     contracts = data['contracts']
 

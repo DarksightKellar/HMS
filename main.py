@@ -8,14 +8,15 @@ from helper_classes.evaluate import *
 
 # 1. Initialise problem and params
 print('\nSetting up Problem Instance...\n')
-instance = Instance.create_test_instance()
+# instance = Instance.create_test_instance()
 _instance = create_instance()
+instance = _instance
 
-hsa = HarmonySearch(n_allocations=_instance.nurses[0].n_allocations)
+hsa = HarmonySearch(n_allocations=instance.nurses[0].n_allocations)
 
 # 2. Initialise HM
 print('Initialising Harmony Memory...')
-hsa.setup(_instance)
+hsa.setup(instance)
 
 print(' [DONE]\n\nInitial harmony memory costs:')
 print([c[1] for c in hsa.harmony_memory])
@@ -42,6 +43,6 @@ for x in hsa.harmony_memory:
     if x[1] < best_solution[1]:
         best_solution = x
 
-cost = evaluate_harmony(best_solution[0], _instance)
+# cost = evaluate_harmony(best_solution[0], instance)
 
 print('')

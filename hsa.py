@@ -45,7 +45,6 @@ class HarmonySearch():
                 params['n_improvisations'], params['hm_size'], params['n_allocations'])
 
         self.initialise_memory(shifts, nurses)
-        self.instance = instance
 
     def setParams(self, hmcr, par, n_improvisations, hms, n_allocations):
         '''
@@ -179,12 +178,10 @@ class HarmonySearch():
                             selected_instrument[sel_indx] = 0
                             selected_instrument[indx] = 1    
             else: # randomise instrument decision vars
-                for decision_var_i in range(self.n_allocations):
-                    # RESEARCH POINT: tend these assignements toward improving cost
-                    # (means I'll have to rather track instruments for which HM wasn't 
-                    # considered,then for each, attempt setting decision variables)
-                    new_harmony[instrument_i][decision_var_i] = random.randint(0, 1)
+                instruments_to_be_randomised.append(instrument_i)
+                # RESEARCH POINT: tend these assignements toward improving cost
 
+        self.instruments_to_be_randomised = instruments_to_be_randomised
         self.improvisations_done += 1
 
         return new_harmony
@@ -197,6 +194,21 @@ class HarmonySearch():
             self.n_improvisations_without_improvement += 1
             self.n_infeasible_solutions += 1
             return
+
+        for instrument_i in self.instruments_to_be_randomised:
+            for decision_var_i in range(self.n_allocations):
+                val = random.randint(0, 1)
+                flip_val = 0 if val is 1 else 0
+
+                harmony[instrument_i][decision_var_i] = val
+
+                new_cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
+                
+                if new_cost is None or new_cost > cost: 
+                    harmony[instrument_i][decision_var_i] = flip_val
+                else:
+                    cost = new_cost
+
 
         # get memorised soln with worst cost
         worst_soln_cost = [[], 0]
