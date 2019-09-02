@@ -20,6 +20,7 @@ class HarmonySearch():
         self.hm_size = hm_size
         self.improvisations_done = 0
         self.n_improvisations_without_improvement = 0
+        self.n_infeasible_solutions = 0
 
         # harmony_memory: list of memorised decision variable values,
         # with costs: [soln, cost]
@@ -36,6 +37,8 @@ class HarmonySearch():
         cover_requests = instance.cover_request_matrix
         day_requests = instance.day_request_matrix
         shift_requests = instance.shift_request_matrix
+
+        self.instance = instance
 
         if setParams:
             self.setParams(params['hmcr'], params['par'],
@@ -67,7 +70,7 @@ class HarmonySearch():
         '''
         
         for i in range(self.hm_size):
-            soln_and_cost = ordering(shifts, nurses)
+            soln_and_cost = ordering(shifts, nurses, self.instance)
             self.harmony_memory.append(soln_and_cost)
             print(".", end = '')
 
@@ -80,6 +83,7 @@ class HarmonySearch():
         
         # List of scheduled nurses (instruments that played new improvisation from HM)
         already_scheduled_idxs = []
+        instruments_to_be_randomised = []
 
 
         # for each instrument (ie nurse), generate new improvisation ...
@@ -190,6 +194,8 @@ class HarmonySearch():
         cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
 
         if cost is None:
+            self.n_improvisations_without_improvement += 1
+            self.n_infeasible_solutions += 1
             return
 
         # get memorised soln with worst cost

@@ -7,7 +7,7 @@
     </Skills>
 
     <ShiftTypes>
-        <Shift ID="E">
+        <Shift weight='1' ID="E">
             <StartTime>06:30:00</StartTime>
             <EndTime>14:30:00</EndTime>
             <Description>Early</Description>
@@ -16,7 +16,7 @@
             </Skills>
         </Shift>
 
-        <Shift ID="L">
+        <Shift weight='2' ID="L">
             <StartTime>14:30:00</StartTime>
             <EndTime>22:30:00</EndTime>
             <Description>Late</Description>
@@ -25,7 +25,7 @@
             </Skills>
         </Shift>
 
-        <Shift ID="N">
+        <Shift weight='3' ID="N">
             <StartTime>22:30:00</StartTime>
             <EndTime>06:30:00</EndTime>
             <Description>Night</Description>

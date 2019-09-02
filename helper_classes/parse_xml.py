@@ -13,7 +13,12 @@ def parseXML(xmlfile):
     # get root SchedulingPeriod element 
     root = tree.getroot()
 
-    number_of_days = int(root.attrib['nDays'])
+    startDay = int(str(root.find('StartDate').text).split('-')[2])
+    endDay = int(str(root.find('EndDate').text).split('-')[2])
+
+    assert startDay == 1
+
+    number_of_days = endDay - startDay + 1 # int(root.attrib['nDays'])
     skills = [] 
     shift_types = []
     shift_skills = []

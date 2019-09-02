@@ -2,13 +2,13 @@ from typing import List
 
 import random
 
-from helper_classes.evaluate import evaluate_solution
+from helper_classes.evaluate import evaluate_solution, evaluate_harmony
 from helper_classes.nurse import Nurse
 from helper_classes.shift import Shift
 from helper_classes.skills import Skill, SkillRequired
 
 
-def ordering(shifts: List[Shift], nurses: List[Nurse]) -> List:
+def ordering(shifts: List[Shift], nurses: List[Nurse], instance) -> List:
     '''
     `shifts` A list of Shift objects
 

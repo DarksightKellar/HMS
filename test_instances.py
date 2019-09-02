@@ -3,9 +3,10 @@ from math import ceil
 from helper_classes.nurse import *
 from helper_classes.skills import *
 from helper_classes.parse_xml import parseXML
+from helper_classes.test_data.filenames import *
 
 def create_instance():
-    data = parseXML('helper_classes/test_data/sprint_early/sprint01.xml')
+    data = parseXML(INSTANCE_XML)
     '''
     data = {
         'number_of_days': number_of_days,
