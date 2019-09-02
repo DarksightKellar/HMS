@@ -3,12 +3,25 @@ from helper_classes.nurse import Nurse
 from helper_classes.skills import *
 from helper_classes.constants import N_DAYS, N_SHIFTS
 from helper_classes.contract import Contract
+from helper_classes.write_xml import writeXML
+from helper_classes.test_data.filenames import *
+
 from fitness_evaluation.eval import evaluate
 from fitness_evaluation.numbering import Numbering
 
+import os
 
-def evaluate_harmony(harmony):
-    return 0
+def evaluate_harmony(harmony, instance):
+    writeXML(SOLUTION_XML, 'Test', instance, harmony)
+
+    cmd = str.format('java -jar data/evaluate.jar -p {} -s {}', INSTANCE_XML, SOLUTION_XML)
+    output = os.popen(cmd).read()
+    
+    results = output.split('\n')
+    hard_constraint_cost = float(results[0].split(':')[1])
+    soft_constraint_cost = float(results[1].split(':')[1])
+
+    return [hard_constraint_cost, soft_constraint_cost]
 
 
 def get_cost(vals):
