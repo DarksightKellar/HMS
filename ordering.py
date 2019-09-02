@@ -16,20 +16,16 @@ def ordering(shifts: List[Shift], nurses: List[Nurse], instance) -> List:
     '''
 
     # Duplicate shifts and nurses so modifications don't affect them
-    _nurses = []
+    _nurses = [n.duplicate() for n in nurses]
     _shifts = []
-    
-    for n in nurses:
-        _nurses.append(n.duplicate())  
 
-    # each nurse in nurses is a list of `n_shifts` 0-1 allocations for each shift in shifts
     n_shifts = len(shifts)
     n_nurses = len(nurses)
 
     assert(n_shifts == nurses[0].n_allocations)
 
     final_schedule = []
-    contracts = [n.contract for n in nurses]
+    contracts = [n.contract for n in _nurses]
 
     # Apply weight evaluation function to each shift's weight
     # to determine assignment difficulty
@@ -73,7 +69,7 @@ def ordering(shifts: List[Shift], nurses: List[Nurse], instance) -> List:
             nurse.assign(shift)
 
             solution = [n.allocations for n in _nurses]
-            cost = evaluate_solution(solution, _shifts, contracts=contracts)
+            cost = evaluate_solution(solution, _shifts, contracts=contracts, reject_empty_shift=False)
             if shift_best_cost is None:
                 shift_best_cost = cost
             

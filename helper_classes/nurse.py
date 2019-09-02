@@ -19,9 +19,11 @@ class Nurse():
         assert(shift.index < self.n_allocations and shift.index >= 0)
 
         self.allocations[shift.index] = 1
-        shift.assigned_nurses.append(self)
-        self.n_assignments += 1
-        self.has_no_allocations = False
+
+        if self not in shift.assigned_nurses:
+            shift.assigned_nurses.append(self)
+            self.n_assignments += 1
+            self.has_no_allocations = False
 
     def unassign(self, shift: Shift):
         assert(shift.index < self.n_allocations and shift.index >= 0)

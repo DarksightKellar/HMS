@@ -5,10 +5,10 @@ from ordering import ordering
 from helper_classes.constants import *
 
 HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
-PITCH_ADJUSTMENT_RATE = 0.5
+PITCH_ADJUSTMENT_RATE = 0.1
 N_IMROVISATIONS = 100000
 PLATEAU_THRESHOLD = 5000 # but quit early after this number of iterations without improvement
-HARMONY_MEMORY_SIZE = 10
+HARMONY_MEMORY_SIZE = 5
 
 class HarmonySearch():
     def __init__(self, HMCR=HARMONY_MEMORY_CONSIDERATION_RATE, PAR=PITCH_ADJUSTMENT_RATE,
@@ -93,7 +93,7 @@ class HarmonySearch():
                 hm_index = random.randint(0, self.hm_size-1)
                 [rand_soln, cost] = self.harmony_memory[hm_index]
 
-                schedule = rand_soln[instrument_i]
+                schedule = [x for x in rand_soln[instrument_i]]
                 new_harmony[instrument_i] = schedule
                 
                 already_scheduled_idxs.append(instrument_i)
@@ -188,6 +188,17 @@ class HarmonySearch():
 
     def update_memory(self, harmony):
         contracts = [n.contract for n in self.instance.nurses]
+
+        # Make nurse assignments as set out in harmony matrix
+        nurse_i = 0
+        for schedule in harmony:
+            for shift_i in range(len(schedule)):
+                if schedule[shift_i] is 1:
+                    self.instance.nurses[nurse_i].assign(self.instance.shifts[shift_i])
+
+            nurse_i += 1
+
+
         cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
 
         if cost is None:
