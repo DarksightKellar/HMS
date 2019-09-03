@@ -5,7 +5,7 @@ from ordering import ordering
 from helper_classes.constants import *
 
 HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
-PITCH_ADJUSTMENT_RATE = 0.1
+PITCH_ADJUSTMENT_RATE = 0.01
 N_IMROVISATIONS = 100000
 PLATEAU_THRESHOLD = 5000 # but quit early after this number of iterations without improvement
 HARMONY_MEMORY_SIZE = 5
@@ -186,26 +186,19 @@ class HarmonySearch():
 
         return new_harmony
 
-    def update_memory(self, harmony):
-        contracts = [n.contract for n in self.instance.nurses]
-
+    def populate_shift_objects(self, harmony):
         # Make nurse assignments as set out in harmony matrix
         nurse_i = 0
         for schedule in harmony:
             for shift_i in range(len(schedule)):
                 if schedule[shift_i] is 1:
                     self.instance.nurses[nurse_i].assign(self.instance.shifts[shift_i])
+                else:
+                    self.instance.nurses[nurse_i].unassign(self.instance.shifts[shift_i])
 
             nurse_i += 1
 
-
-        cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
-
-        if cost is None:
-            self.n_improvisations_without_improvement += 1
-            self.n_infeasible_solutions += 1
-            return
-
+    def generate_random_vals(self, harmony, best_cost, contracts):
         for instrument_i in self.instruments_to_be_randomised:
             for decision_var_i in range(self.n_allocations):
                 val = random.randint(0, 1)
@@ -213,13 +206,29 @@ class HarmonySearch():
 
                 harmony[instrument_i][decision_var_i] = val
 
+                self.populate_shift_objects(harmony)
                 new_cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
                 
-                if new_cost is None or new_cost > cost: 
+                if new_cost is None or new_cost > best_cost: 
                     harmony[instrument_i][decision_var_i] = flip_val
                 else:
-                    cost = new_cost
+                    best_cost = new_cost
+        
+        return best_cost
 
+    def update_memory(self, harmony):
+        contracts = [n.contract for n in self.instance.nurses]
+
+        self.populate_shift_objects(harmony) # initially has all 0s for instruments that didn't choose from HM 
+        cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
+
+        if cost is None:
+            self.n_improvisations_without_improvement += 1
+            self.n_infeasible_solutions += 1
+            return
+
+        # Replace cost after perfomining randomisation
+        cost = self.generate_random_vals(harmony, cost, contracts)
 
         # get memorised soln with worst cost
         worst_soln_cost = [[], 0]

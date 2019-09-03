@@ -28,6 +28,9 @@ class Nurse():
     def unassign(self, shift: Shift):
         assert(shift.index < self.n_allocations and shift.index >= 0)
 
+        if self.has_no_allocations or self not in shift.assigned_nurses:
+            return
+
         self.allocations[shift.index] = 0
         shift.assigned_nurses.remove(self)
         self.n_assignments -= 1

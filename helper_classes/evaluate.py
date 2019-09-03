@@ -51,7 +51,7 @@ def get_cost(vals):
     return cost
 
 
-def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
+def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_empty_shift=True) -> int:
     '''
     Evaluate a solution, returns `cost` of the solution
 
@@ -89,12 +89,14 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
         i += 1
 
     # check shift requirements
+    a_shift_is_empty = False
     for shift in shifts:
         shift: Shift
 
         # Infeasible solution if a shift has no nurses assigned to it
         if len(shift.assigned_nurses) == 0:
-            return None
+            a_shift_is_empty = True
+            total_cost += 10
 
         for requirement in shift.skills_required:
             requirement: SkillRequired
@@ -110,11 +112,14 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[]) -> int:
 
             # Under-staffing
             if deficit > 0:
-                total_cost += requirement.cost * deficit
+                total_cost += requirement.cost * deficit*3
 
             # Over-staffing
-            if deficit < -1 * (requirement.required / 2):
-                # total_cost += -1 * deficit/2 * requirement.cost * 10
-                total_cost += -1 * deficit * requirement.cost
+            if deficit < 0:
+                penalty = -1 * deficit
+                total_cost += (requirement.cost * penalty * 3) ** penalty
+
+    if reject_empty_shift and a_shift_is_empty:
+        return None
 
     return total_cost
