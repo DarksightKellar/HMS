@@ -107,6 +107,9 @@ def ordering(shifts: List[Shift], nurses: List[Nurse], instance) -> List:
                 best_nurse = nurse
                 tentative_best_nurse = nurse
 
+            elif cost == best_cost and len(shift.assigned_nurses) > shift.n_nurses_required:
+                    nurse.unassign(shift)
+
         if best_nurse is None:
             if tentative_best_nurse is None:
                 0 # print('FEASIBLE SOLUTION NOT FOUND')
