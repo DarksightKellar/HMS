@@ -171,23 +171,23 @@ class Numbering():
 
         return Numbering(
             numbering, prev_numbering, n_days, n_shifts,
-            max_total=int(6 * (n_days/7)) # ie, max number of assigned days PER WEEK, in N weeks
-            cost_max_total=COST_MAX_TOTAL
+            max_total=int(6 * (n_days/7)), # ie, max number of assigned days PER WEEK, in N weeks
+            cost_max_total=COST_MAX_TOTAL,
 
-            min_total=int(3 * (n_days/7)) # ie, min number of assigned days PER WEEK, in N weeks
-            cost_min_total=COST_MIN_TOTAL
+            min_total=int(3 * (n_days/7)), # ie, min number of assigned days PER WEEK, in N weeks
+            cost_min_total=COST_MIN_TOTAL,
 
-            min_between=1
-            cost_min_between=COST_MIN_BETWEEN
+            min_between=1,
+            cost_min_between=COST_MIN_BETWEEN,
 
-            max_between=3
-            cost_max_between=COST_MAX_BETWEEN
+            max_between=3,
+            cost_max_between=COST_MAX_BETWEEN,
 
-            min_consecutive=2
-            cost_min_consecutive=COST_MIN_CONSECUTIVE
+            min_consecutive=2,
+            cost_min_consecutive=COST_MIN_CONSECUTIVE,
 
-            max_consecutive=4
-            cost_max_consecutive=COST_MAX_CONSECUTIVE
+            max_consecutive=4,
+            cost_max_consecutive=COST_MAX_CONSECUTIVE,
 
             cost_max_pert=COST_MAX_PERT
         )
@@ -218,13 +218,13 @@ class Numbering():
 
         return Numbering(
             numbering, prev_numbering, n_days, n_shifts,
-            min_consecutive=MIN_CONSECUTIVE_NIGHT
-            cost_min_consecutive=3
+            min_consecutive=2,
+            cost_min_consecutive=COST_MIN_CONSECUTIVE,
             
-            max_consecutive=4
-            cost_max_consecutive=COST_MAX_CONSECUTIVE
+            max_consecutive=4,
+            cost_max_consecutive=COST_MAX_CONSECUTIVE,
 
-            max_total=int(5 * (n_days/7)) # max night shift assignments PER WEEK, in N weeks
+            max_total=int(5 * (n_days/7)), # max night shift assignments PER WEEK, in N weeks
             cost_max_total=COST_MAX_TOTAL
         )
 
