@@ -194,6 +194,32 @@ class Numbering():
         return Numbering(numbering, prev_numbering, n_days, n_shifts)
 
     @classmethod
+    def morning_after_night(self, n_days, n_shifts):
+        '''
+        Sets up this Numbering to check for a morning assignment
+        after a night shift assignment
+        '''
+        numbering = [-1]
+        prev_numbering = [-1]
+        for i in range(1, n_days * n_shifts):
+            n = floor(i/n_shifts)
+            
+            if (i+1) % n_shifts == 0:
+                numbering.append(n)
+                prev_numbering.append(-1 * (n+2))
+            elif (i+1) % n_shifts == 1:
+                numbering.append(n-1)
+                prev_numbering.append(-1 * (n+1))
+            else: 
+                numbering.append(None)
+                prev_numbering.append(None)
+                
+        prev_numbering.reverse()
+
+        return Numbering(numbering, prev_numbering, n_days, n_shifts)
+
+
+    @classmethod
     def weekend(self, n_days, n_shifts):
         '''
         Sets up this Numbering to check for weekend assignments
