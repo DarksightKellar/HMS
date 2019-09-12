@@ -50,15 +50,21 @@ def get_cost(vals):
 
     return cost
 
+def update_details(res, details):
+    # TODO: Update constraint violation details
+    pass
 
 def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_empty_shift=True) -> int:
     '''
-    Evaluate a solution, returns `cost` of the solution
+    Evaluate a solution, returns `[cost, details]` of the solution,
+    with `details` containing details of any constraint violations.
 
     Returns `None` if solution is infeasible
     '''
 
     total_cost = 0
+    details = {}
+
     i = 0
     if len(prev_solution) == 0:
         prev_solution = [[0 for _ in range(len(shifts))] for _ in range(len(solution))]
@@ -77,13 +83,17 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_e
         m_list = [n.get_M() for n in __numberings__]
 
         res = evaluate(schedule, prev_schedule, __numberings__, contract)
+        update_details(res, details)
 
         # Infeasible solution if a nurse has multiple assignments for any day
         for per_t in res['per_t'][0]:
             if per_t > 1:
-                return None
-
+                return [None, details]
         
+        # Infeasible solution if a nurse has a morning after night shift
+        for per_t in res['per_t'][1]:
+            if per_t > 1:
+                return [None, details]
 
         total_cost += get_cost(res)
         i += 1

@@ -198,7 +198,7 @@ class HarmonySearch():
 
             nurse_i += 1
 
-    def generate_random_vals(self, harmony, best_cost, contracts):
+    def generate_random_vals(self, harmony, best_cost, best_cost_details, contracts):
         for instrument_i in self.instruments_to_be_randomised:
             for decision_var_i in range(self.n_allocations):
                 val = random.randint(0, 1)
@@ -207,28 +207,30 @@ class HarmonySearch():
                 harmony[instrument_i][decision_var_i] = val
 
                 self.populate_shift_objects(harmony)
-                new_cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
+                [new_cost, new_details] = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
                 
                 if new_cost is None or new_cost > best_cost: 
                     harmony[instrument_i][decision_var_i] = flip_val
                 else:
                     best_cost = new_cost
+                    best_cost_details = new_details
         
-        return best_cost
+        return [best_cost, best_cost_details]
 
     def update_memory(self, harmony):
         contracts = [n.contract for n in self.instance.nurses]
 
-        self.populate_shift_objects(harmony) # initially has all 0s for instruments that didn't choose from HM 
-        cost = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
+        # initially has all 0s for instruments that didn't choose from HM 
+        self.populate_shift_objects(harmony)
+        [cost, details] = evaluate_solution(harmony, self.instance.shifts, contracts=contracts)
 
         if cost is None:
             self.n_improvisations_without_improvement += 1
             self.n_infeasible_solutions += 1
             return
 
-        # Replace cost after perfomining randomisation
-        cost = self.generate_random_vals(harmony, cost, contracts)
+        # Replace cost, details after performing randomisation
+        [cost, details] = self.generate_random_vals(harmony, cost, details, contracts)
 
         # get memorised soln with worst cost
         worst_soln_cost = [[], 0]
@@ -238,7 +240,7 @@ class HarmonySearch():
 
         if cost < worst_soln_cost[1]:
             self.harmony_memory.remove(worst_soln_cost)
-            self.harmony_memory.append([harmony, cost])
+            self.harmony_memory.append([harmony, cost, details])
             self.n_improvisations_without_improvement = 0
         else:
             self.n_improvisations_without_improvement += 1

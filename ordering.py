@@ -69,7 +69,7 @@ def ordering(shifts: List[Shift], nurses: List[Nurse], instance) -> List:
             nurse.assign(shift)
 
             solution = [n.allocations for n in _nurses]
-            cost = evaluate_solution(solution, _shifts, contracts=contracts, reject_empty_shift=False)
+            cost = evaluate_solution(solution, _shifts, contracts=contracts, reject_empty_shift=False)[0]
             if shift_best_cost is None:
                 shift_best_cost = cost
             
@@ -119,4 +119,5 @@ def ordering(shifts: List[Shift], nurses: List[Nurse], instance) -> List:
     for n in _nurses:
         final_schedule.append(n.allocations.copy())
 
-    return [final_schedule, best_cost]
+    details = evaluate_solution(solution, _shifts, contracts=contracts, reject_empty_shift=False)[1]
+    return [final_schedule, best_cost, details]
