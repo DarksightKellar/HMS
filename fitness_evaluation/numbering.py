@@ -171,9 +171,10 @@ class Numbering():
 
         return Numbering(
             numbering, prev_numbering, n_days, n_shifts,
-            cost_min_total=COST_MIN_TOTAL
+            max_total=int(6 * (n_days/7)) # ie, max number of assigned days PER WEEK, in N weeks
             cost_max_total=COST_MAX_TOTAL
 
+            min_total=int(3 * (n_days/7)) # ie, min number of assigned days PER WEEK, in N weeks
             cost_min_total=COST_MIN_TOTAL
 
             min_between=1
@@ -223,7 +224,7 @@ class Numbering():
             max_consecutive=4
             cost_max_consecutive=COST_MAX_CONSECUTIVE
 
-            max_total=5
+            max_total=int(5 * (n_days/7)) # max night shift assignments PER WEEK, in N weeks
             cost_max_total=COST_MAX_TOTAL
         )
 
