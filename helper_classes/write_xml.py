@@ -15,30 +15,27 @@ def writeXML(destination, instance_name, instance, solution):
 
     n_shifts = len(instance.shift_types)
 
-    employee_i = 1
-    for schedule in solution:
-        shift_i = 1
-        for assigned in schedule:
-            if assigned is 0:
-                shift_i += 1
+    day_n = 0
+    for shift_i in range(len(solution[0])):
+        if shift_i % n_shifts == 0:
+            day_n += 1
+
+        for employee_i in range(len(solution)):
+            if solution[employee_i][shift_i] == 0:
                 continue
                 
             assignment = ET.SubElement(root, 'Assignment')
 
             date = ET.SubElement(assignment, 'Date')
-            day_number = str.format('0{}', shift_i) if shift_i < 10 else shift_i
+            day_number = str.format('0{}', day_n) if day_n < 10 else day_n
             date.text = str.format('2010-01-{}', day_number)
             
             employee = ET.SubElement(assignment, 'Employee')
             employee.text = str(employee_i)
             
             shiftType = ET.SubElement(assignment, 'ShiftType')
-            shift = instance.shift_types[(shift_i-1) % n_shifts]
+            shift = instance.shift_types[(shift_i) % n_shifts]
             shiftType.text = str(shift)[0]
-            
-            shift_i += 1
-
-        employee_i += 1
 
     # create a new XML file with the results
     data = ET.tostring(root)

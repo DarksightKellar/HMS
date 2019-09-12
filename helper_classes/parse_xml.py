@@ -35,12 +35,21 @@ def parseXML(xmlfile):
     # retrieve skills
     for skill in root.findall('./Skills/Skill'):
         skills.append(Skill(str(skill.text)))
+        
+    
+    def get_skill(skill):
+        for s in skills:
+            if s.skill == skill:
+                return s
+        
+        return None
 
+    
     # retrieve shift types, and associated required skills
     for shift in root.findall('./ShiftTypes/Shift'):
         # for shift in st.findall('Shift'):
         shift_types.append(str(shift.find('Description').text))
-        shift_skills.append([Skill(str(sk.text)) for sk in shift.findall('Skills/Skill')])
+        shift_skills.append([get_skill(sk.text) for sk in shift.findall('Skills/Skill')])
         shift_ids.append(str(shift.attrib['ID']))
         shift_weights.append(int(shift.attrib['weight']))
 
@@ -70,7 +79,7 @@ def parseXML(xmlfile):
     # retrieve nurses
     for n in root.findall('./Employees/Employee'):
         names = str(n.find('Name').text).split(' ')
-        nurse_skills = [ Skill(str(sk.text)) for sk in n.find('Skills') ]
+        nurse_skills = [get_skill(sk.text) for sk in n.find('Skills')]
         contract_id = int(n.find('ContractID').text)
         nurse_id = str(n.attrib['ID'])
 
