@@ -13,7 +13,7 @@ class Numbering():
         cost_min_total = COST_MIN_TOTAL,
         cost_max_total = COST_MAX_TOTAL,
         cost_min_pert = COST_MIN_PERT,
-        cost_max_per = COST_MAX_PERT,
+        cost_max_pert = COST_MAX_PERT,
         cost_min_between = COST_MIN_BETWEEN,
         cost_max_between = COST_MAX_BETWEEN,
         cost_min_consecutive = COST_MIN_CONSECUTIVE,
@@ -36,8 +36,8 @@ class Numbering():
         self.cost_min_total = cost_min_total
         self.cost_max_total = cost_max_total
         
-        self.cost_min_pert = 1
-        self.cost_max_pert = 1
+        self.cost_min_pert = cost_min_pert
+        self.cost_max_pert = cost_max_pert
         
         self.cost_min_between = cost_min_between
         self.cost_max_between = cost_max_between
@@ -54,8 +54,8 @@ class Numbering():
         self.max_consecutive = max_consecutive
 
         # maximum, minimum gap between two non-consecutive events
-        self.min_between = 0
-        self.max_between = 3
+        self.min_between = min_between
+        self.max_between = max_between
         
         # minimum, maximum number of events mappable to each numbering
         M = self.get_M()

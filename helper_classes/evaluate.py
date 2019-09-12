@@ -16,6 +16,9 @@ def evaluate_harmony(harmony, instance):
 
     cmd = str.format('java -jar data/evaluate.jar -p {} -s {}', INSTANCE_XML, SOLUTION_XML)
     output = os.popen(cmd).read()
+
+    if output == '':
+        return [None, None]
     
     results = output.split('\n')
     hard_constraint_cost = float(results[0].split(':')[1])
@@ -89,7 +92,7 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_e
         for per_t in res['per_t'][0]:
             if per_t > 1:
                 return [None, details]
-        
+
         # Infeasible solution if a nurse has a morning after night shift
         for per_t in res['per_t'][1]:
             if per_t > 1:
@@ -106,7 +109,7 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_e
         # Infeasible solution if a shift has no nurses assigned to it
         if len(shift.assigned_nurses) == 0:
             a_shift_is_empty = True
-            total_cost += 10
+            total_cost += 1
 
         for requirement in shift.skills_required:
             requirement: SkillRequired
@@ -122,14 +125,14 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_e
 
             # Under-staffing
             if deficit > 0:
-                total_cost += requirement.cost * deficit*3
+                total_cost += requirement.cost * deficit
 
             # Over-staffing
             if deficit < 0:
-                penalty = -1 * deficit
-                total_cost += (requirement.cost * penalty * 3) ** penalty
+                penalty = -1 * deficit + 1
+                total_cost += (requirement.cost * penalty) ** penalty
 
     if reject_empty_shift and a_shift_is_empty:
         return None
 
-    return total_cost
+    return [total_cost, details]

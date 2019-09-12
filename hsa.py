@@ -8,7 +8,7 @@ HARMONY_MEMORY_CONSIDERATION_RATE = 0.99
 PITCH_ADJUSTMENT_RATE = 0.01
 N_IMROVISATIONS = 100000
 PLATEAU_THRESHOLD = 5000 # but quit early after this number of iterations without improvement
-HARMONY_MEMORY_SIZE = 5
+HARMONY_MEMORY_SIZE = 10
 
 class HarmonySearch():
     def __init__(self, HMCR=HARMONY_MEMORY_CONSIDERATION_RATE, PAR=PITCH_ADJUSTMENT_RATE,
@@ -71,6 +71,7 @@ class HarmonySearch():
         for i in range(self.hm_size):
             soln_and_cost = ordering(shifts, nurses, self.instance)
             self.harmony_memory.append(soln_and_cost)
+            # cost = evaluate_harmony(soln_and_cost[0], self.instance)
             print(".", end = '')
 
 

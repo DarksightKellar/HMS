@@ -18,7 +18,7 @@ def parseXML(xmlfile):
 
     assert startDay == 1
 
-    number_of_days = endDay - startDay + 1 # int(root.attrib['nDays'])
+    number_of_days = endDay - startDay + 1
     skills = [] 
     shift_types = []
     shift_skills = []
