@@ -92,7 +92,7 @@ class HarmonySearch():
 
             if consider_hm:
                 hm_index = random.randint(0, self.hm_size-1)
-                [rand_soln, cost] = self.harmony_memory[hm_index]
+                [rand_soln, cost, details] = self.harmony_memory[hm_index]
 
                 schedule = [x for x in rand_soln[instrument_i]]
                 new_harmony[instrument_i] = schedule
@@ -234,7 +234,7 @@ class HarmonySearch():
         [cost, details] = self.generate_random_vals(harmony, cost, details, contracts)
 
         # get memorised soln with worst cost
-        worst_soln_cost = [[], 0]
+        worst_soln_cost = [[], 0, {}]
         for soln_cost in self.harmony_memory:
             if soln_cost[1] > worst_soln_cost[1]:
                 worst_soln_cost = soln_cost

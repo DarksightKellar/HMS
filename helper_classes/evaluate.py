@@ -133,6 +133,6 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_e
                 total_cost += (requirement.cost * penalty) ** penalty
 
     if reject_empty_shift and a_shift_is_empty:
-        return None
+        return [None, details]
 
     return [total_cost, details]
