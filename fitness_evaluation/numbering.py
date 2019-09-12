@@ -10,14 +10,14 @@ class Numbering():
         n_days,
         n_shifts,
 
-        cost_min_total = COST_MIN_TOTAL,
-        cost_max_total = COST_MAX_TOTAL,
-        cost_min_pert = COST_MIN_PERT,
-        cost_max_pert = COST_MAX_PERT,
-        cost_min_between = COST_MIN_BETWEEN,
-        cost_max_between = COST_MAX_BETWEEN,
-        cost_min_consecutive = COST_MIN_CONSECUTIVE,
-        cost_max_consecutive = COST_MAX_CONSECUTIVE,
+        cost_min_total = 0,
+        cost_max_total = 0,
+        cost_min_pert = 0,
+        cost_max_pert = 0,
+        cost_min_between = 0,
+        cost_max_between = 0,
+        cost_min_consecutive = 0,
+        cost_max_consecutive = 0,
         
         min_total = MIN_TOTAL,
         max_total = MAX_TOTAL,
@@ -157,6 +157,8 @@ class Numbering():
     def consecutive_days(self, n_days, n_shifts):
         '''
         Sets up this Numbering to check for consecutive days
+
+        [0,0,0 | 1,1,1 | 2,2,2 ...]
         '''
         numbering = []
         prev_numbering = []
@@ -167,12 +169,23 @@ class Numbering():
 
         prev_numbering.reverse()
 
-        return Numbering(numbering, prev_numbering, n_days, n_shifts)
+        return Numbering(
+            numbering, prev_numbering, n_days, n_shifts,
+            cost_min_total=COST_MIN_TOTAL
+            cost_max_total=COST_MAX_TOTAL
+            cost_min_between=COST_MIN_BETWEEN
+            cost_max_between=COST_MAX_BETWEEN
+            cost_min_consecutive=COST_MIN_CONSECUTIVE
+            cost_max_consecutive=COST_MAX_CONSECUTIVE
+            cost_max_pert=COST_MAX_PERT
+        )
 
     @classmethod
     def consecutive_night_shifts(self, n_days, n_shifts):
         '''
         Sets up this Numbering to check for consecutive night shifts
+
+        [None,None,0 | None,None,1 | None,None,2 ...]
         '''
         numbering = []
         prev_numbering = []
@@ -191,13 +204,26 @@ class Numbering():
                 
         prev_numbering.reverse()
 
-        return Numbering(numbering, prev_numbering, n_days, n_shifts)
+        return Numbering(
+            numbering, prev_numbering, n_days, n_shifts,
+            min_consecutive=MIN_CONSECUTIVE_NIGHT
+            max_consecutive=MAX_CONSECUTIVE_NIGHT
+
+            # cost_min_total=COST_MIN_TOTAL
+            # cost_max_total=COST_MAX_TOTAL
+            # cost_min_between=COST_MIN_BETWEEN
+            # cost_max_between=COST_MAX_BETWEEN
+            cost_min_consecutive=COST_MIN_CONSECUTIVE
+            cost_max_consecutive=COST_MAX_CONSECUTIVE
+        )
 
     @classmethod
     def morning_after_night(self, n_days, n_shifts):
         '''
         Sets up this Numbering to check for a morning assignment
         after a night shift assignment
+
+        [-1,None,0 | 0,None,1 | 1,None,2 ...]
         '''
         numbering = [-1]
         prev_numbering = [-1]
@@ -216,13 +242,18 @@ class Numbering():
                 
         prev_numbering.reverse()
 
-        return Numbering(numbering, prev_numbering, n_days, n_shifts)
+        return Numbering(
+            numbering, prev_numbering, n_days, n_shifts,
+            cost_max_pert=COST_MAX_PERT
+        )
 
 
     @classmethod
     def weekend(self, n_days, n_shifts):
         '''
         Sets up this Numbering to check for weekend assignments
+
+        [None,None,None | None,None,None | None,None,None | None,None,None | None,None,None | 0,0,0 | 1,1,1]
         '''
         numbering = []
         prev_numbering = []
