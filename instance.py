@@ -49,12 +49,12 @@ class Instance():
             is_weekend = i % 21 in [15,16,17,18,19,20]
 
             shift = 'morning' if is_morning_shift else 'afternoon' if is_afternoon_shift else 'night'
-            nurses_required = 3 if is_morning_shift else 5 if is_afternoon_shift else 2
+            nurses_required = 5 if is_morning_shift else 3 if is_afternoon_shift else 2
             weight = 0
 
             # different nurse requirements for weekend shifts
             if is_weekend:
-                nurses_required = 1 if is_night_shift else 2
+                nurses_required = 3 if is_morning_shift else 2 if is_afternoon_shift else 1
 
             # skills_required specify the minimum number required for the shift
             # Aside that, all base nurses count toward the total staff requirement
