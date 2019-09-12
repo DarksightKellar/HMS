@@ -173,10 +173,21 @@ class Numbering():
             numbering, prev_numbering, n_days, n_shifts,
             cost_min_total=COST_MIN_TOTAL
             cost_max_total=COST_MAX_TOTAL
+
+            cost_min_total=COST_MIN_TOTAL
+
+            min_between=1
             cost_min_between=COST_MIN_BETWEEN
+
+            max_between=3
             cost_max_between=COST_MAX_BETWEEN
+
+            min_consecutive=2
             cost_min_consecutive=COST_MIN_CONSECUTIVE
+
+            max_consecutive=4
             cost_max_consecutive=COST_MAX_CONSECUTIVE
+
             cost_max_pert=COST_MAX_PERT
         )
 
@@ -207,14 +218,13 @@ class Numbering():
         return Numbering(
             numbering, prev_numbering, n_days, n_shifts,
             min_consecutive=MIN_CONSECUTIVE_NIGHT
-            max_consecutive=MAX_CONSECUTIVE_NIGHT
-
-            # cost_min_total=COST_MIN_TOTAL
-            # cost_max_total=COST_MAX_TOTAL
-            # cost_min_between=COST_MIN_BETWEEN
-            # cost_max_between=COST_MAX_BETWEEN
-            cost_min_consecutive=COST_MIN_CONSECUTIVE
+            cost_min_consecutive=3
+            
+            max_consecutive=4
             cost_max_consecutive=COST_MAX_CONSECUTIVE
+
+            max_total=5
+            cost_max_total=COST_MAX_TOTAL
         )
 
     @classmethod
