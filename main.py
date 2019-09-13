@@ -30,7 +30,7 @@ while hsa.check_stop_criterion():
     hsa.update_memory(new_harmony)#[schedule.copy() for schedule in new_harmony])
 
     if hsa.improvisations_done%1000 == 0:
-        print(".", end = '')
+        print(".", end = '', flush=True)
 
 print(' [DONE]\n\nFinal harmony memory costs:')
 print([c[1] for c in hsa.harmony_memory])

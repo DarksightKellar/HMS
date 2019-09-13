@@ -72,7 +72,7 @@ class HarmonySearch():
             soln_and_cost = ordering(shifts, nurses, self.instance)
             self.harmony_memory.append(soln_and_cost)
             # cost = evaluate_harmony(soln_and_cost[0], self.instance)
-            print(".", end = '')
+            print(".", end = '', flush=True)
 
 
     def improvise_harmony(self):
