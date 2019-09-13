@@ -234,19 +234,25 @@ class Numbering():
         Sets up this Numbering to check for a morning assignment
         after a night shift assignment
 
-        [-1,None,0 | 0,None,1 | 1,None,2 ...]
+        [-1, -1, 0 | 0, 0, 1 | 1, 1, 2 |...]
         '''
-        numbering = [-1]
-        prev_numbering = [-1]
-        for i in range(1, n_days * n_shifts):
+        numbering = [-1,-1]
+        prev_numbering = [-1, -2]
+        for i in range(2, n_days * n_shifts):
             n = floor(i/n_shifts)
             
             if (i+1) % n_shifts == 0:
                 numbering.append(n)
                 prev_numbering.append(-1 * (n+2))
+
             elif (i+1) % n_shifts == 1:
                 numbering.append(n-1)
                 prev_numbering.append(-1 * (n+1))
+                
+            elif (i+1) % n_shifts == 2:
+                numbering.append(n-1)
+                prev_numbering.append(-1 * (n+2))
+
             else: 
                 numbering.append(None)
                 prev_numbering.append(None)
