@@ -23,11 +23,14 @@ class Contract():
 
         if numberings is None:
             numberings = [
-                Numbering.consecutive_days(n_days, n_shifts),
+                Numbering.consecutive_days(n_days, n_shifts, limit_total, limit_between, limit_consecutive),
                 Numbering.morning_after_night(n_days, n_shifts),
                 Numbering.consecutive_night_shifts(n_days, n_shifts),
-                Numbering.weekend(n_days, n_shifts)
+                # Numbering.weekend(n_days, n_shifts)
             ]
+        else:
+            numberings.append(Numbering.consecutive_days(n_days, n_shifts, limit_total, limit_between, limit_consecutive))
+            numberings.append(Numbering.morning_after_night(n_days, n_shifts))
             
         self.numberings = numberings
         self.n_numberings = len(numberings)
