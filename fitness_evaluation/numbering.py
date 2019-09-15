@@ -154,7 +154,12 @@ class Numbering():
     # FACTORY METHODS TO SET UP NUMBERING VALUES    #
     # ##############################################
     @classmethod
-    def consecutive_days(self, n_days, n_shifts):
+    def consecutive_days(
+        self, n_days, n_shifts, 
+        limit_total=[3,6],
+        limit_between=[1,2],
+        limit_consecutive=[2,3]
+    ):
         '''
         Sets up this Numbering to check for consecutive days
 
@@ -171,29 +176,33 @@ class Numbering():
 
         return Numbering(
             numbering, prev_numbering, n_days, n_shifts,
-            max_total=int(6 * (n_days/7)), # ie, max number of assigned days PER WEEK, in N weeks
-            cost_max_total=COST_MAX_TOTAL,
-
-            min_total=int(3 * (n_days/7)), # ie, min number of assigned days PER WEEK, in N weeks
+            min_total=limit_total[0],
             cost_min_total=COST_MIN_TOTAL,
 
-            min_between=1,
+            max_total=limit_total[1],
+            cost_max_total=COST_MAX_TOTAL,
+
+            min_between=limit_between[0],
             cost_min_between=COST_MIN_BETWEEN,
 
-            max_between=3,
+            max_between=limit_between[1],
             cost_max_between=COST_MAX_BETWEEN,
 
-            min_consecutive=2,
+            min_consecutive=limit_consecutive[0],
             cost_min_consecutive=COST_MIN_CONSECUTIVE,
 
-            max_consecutive=4,
+            max_consecutive=limit_consecutive[1],
             cost_max_consecutive=COST_MAX_CONSECUTIVE,
 
             cost_max_pert=COST_MAX_PERT
         )
 
     @classmethod
-    def consecutive_night_shifts(self, n_days, n_shifts):
+    def consecutive_night_shifts(
+        self, n_days, n_shifts,
+        limit_total=[0,4],
+        limit_consecutive=[3,4]
+        ):
         '''
         Sets up this Numbering to check for consecutive night shifts
 
@@ -218,13 +227,13 @@ class Numbering():
 
         return Numbering(
             numbering, prev_numbering, n_days, n_shifts,
-            min_consecutive=2,
+            min_consecutive=limit_consecutive[0],
             cost_min_consecutive=COST_MIN_CONSECUTIVE,
             
-            max_consecutive=4,
+            max_consecutive=limit_consecutive[1],
             cost_max_consecutive=COST_MAX_CONSECUTIVE,
 
-            max_total=int(5 * (n_days/7)), # max night shift assignments PER WEEK, in N weeks
+            max_total=limit_total[1],
             cost_max_total=COST_MAX_TOTAL
         )
 
