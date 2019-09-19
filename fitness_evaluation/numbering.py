@@ -156,9 +156,9 @@ class Numbering():
     @classmethod
     def consecutive_days(
         self, n_days, n_shifts, 
-        limit_total=[3,6],
-        limit_between=[1,2],
-        limit_consecutive=[2,3]
+        limit_total,
+        limit_between,
+        limit_consecutive
     ):
         '''
         Sets up this Numbering to check for consecutive days
@@ -200,9 +200,9 @@ class Numbering():
     @classmethod
     def consecutive_night_shifts(
         self, n_days, n_shifts,
-        limit_total=[0,4],
-        limit_consecutive=[3,4]
-        ):
+        limit_total,
+        limit_consecutive
+    ):
         '''
         Sets up this Numbering to check for consecutive night shifts
 

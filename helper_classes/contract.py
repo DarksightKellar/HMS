@@ -25,7 +25,10 @@ class Contract():
             numberings = [
                 Numbering.consecutive_days(n_days, n_shifts, limit_total, limit_between, limit_consecutive),
                 Numbering.morning_after_night(n_days, n_shifts),
-                Numbering.consecutive_night_shifts(n_days, n_shifts),
+                Numbering.consecutive_night_shifts(n_days, n_shifts, 
+                    limit_total=[MIN_TOTAL_NIGHTS, MAX_TOTAL_NIGHTS],
+                    limit_consecutive=[MIN_CONSECUTIVE_NIGHTS, MAX_CONSECUTIVE_NIGHTS]
+                ),
                 # Numbering.weekend(n_days, n_shifts)
             ]
         else:

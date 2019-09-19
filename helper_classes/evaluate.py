@@ -18,13 +18,13 @@ def evaluate_harmony(harmony, instance):
     output = os.popen(cmd).read()
 
     if output == '':
-        return [None, None]
+        return [None, None, '']
     
     results = output.split('\n')
     hard_constraint_cost = float(results[0].split(':')[1])
     soft_constraint_cost = float(results[1].split(':')[1])
 
-    return [hard_constraint_cost, soft_constraint_cost]
+    return [hard_constraint_cost, soft_constraint_cost, output]
 
 
 def get_cost(vals):
@@ -129,7 +129,7 @@ def evaluate_solution(solution, shifts, prev_solution=[], contracts=[], reject_e
 
             # Over-staffing
             if deficit < 0:
-                penalty = -1 * deficit + 1
+                penalty = (-1 * deficit) + 1
                 total_cost += (requirement.cost * penalty) ** penalty
 
     if reject_empty_shift and a_shift_is_empty:
